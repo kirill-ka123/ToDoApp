@@ -1,6 +1,6 @@
 package com.example.todoapp.models
 
-import java.util.*
+import java.util.UUID
 
 data class TodoItem(
     val id: UUID,
