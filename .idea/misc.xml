@@ -3,7 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_add.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_close.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_delete.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_info.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_visibility.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_visibility_off.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/item_of_tasks.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/todo_item.xml" value="0.536" />
       </map>
     </option>
   </component>

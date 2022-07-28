@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="title" parent="android:TextAppearance">
+        <item name="android:textSize">
+            32sp
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+    </style>
+
+    <style name="number_of_completed">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_tertiary
+        </item>
+    </style>
+
+    <style name="title_item">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+    </style>
+
+    <style name="make_up_to">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+    </style>
+
+    <style name="delete">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_disable
+        </item>
+    </style>
+
+    <style name="save">
+        <item name="android:textSize">
+            14sp
+        </item>
+        <item name="android:letterSpacing">
+            0.01
+        </item>
+        <item name="android:textColor">
+            @color/blue
+        </item>
+    </style>
+
+    <style name="colored_checkbox" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">
+            @color/green
+        </item>
+        <item name="android:textColorSecondary">
+            @color/label_tertiary
+        </item>
+    </style>
+</resources>
