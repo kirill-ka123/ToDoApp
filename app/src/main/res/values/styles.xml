@@ -58,6 +58,15 @@
         </item>
     </style>
 
+    <style name="date">
+        <item name="android:textSize">
+            14sp
+        </item>
+        <item name="android:textColor">
+            @color/blue
+        </item>
+    </style>
+
     <style name="colored_checkbox" parent="Theme.AppCompat.Light">
         <item name="colorAccent">
             @color/green
@@ -65,5 +74,13 @@
         <item name="android:textColorSecondary">
             @color/label_tertiary
         </item>
+    </style>
+
+    <style name="colored_switch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/blue</item>
+    </style>
+
+    <style name="colored_calendar" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/blue</item>
     </style>
 </resources>
