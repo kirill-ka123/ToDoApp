@@ -14,7 +14,7 @@ class TodoItemsRepository {
     companion object {
         private val todoItems = mutableListOf(
             TodoItem(
-                UUID.randomUUID(),
+                "1",
                 "Сходить к адвокату",
                 Importance.BASIC,
                 1658950803,
@@ -23,7 +23,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "2",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -32,7 +32,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "3",
                 "Написать огромное сочинение по русскому языку на тему: \"Как я классно провел лето и попал в школу мобильной разработки от Яндекса\" продолжение большой строки аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа",
                 Importance.LOW,
                 1658950803,
@@ -41,7 +41,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "4",
                 "Прогуляться",
                 Importance.IMPORTANT,
                 1658950803,
@@ -50,7 +50,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "5",
                 "",
                 Importance.LOW,
                 1658950803,
@@ -59,7 +59,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "6",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -68,7 +68,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "7",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -77,7 +77,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "8",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -86,7 +86,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "9",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -95,7 +95,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "10",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -104,7 +104,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "11",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -113,7 +113,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "12",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -122,7 +122,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "13",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -131,7 +131,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "14",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,
@@ -140,7 +140,7 @@ class TodoItemsRepository {
                 1658950203
             ),
             TodoItem(
-                UUID.randomUUID(),
+                "15",
                 "Почистить зубы",
                 Importance.IMPORTANT,
                 1658950803,

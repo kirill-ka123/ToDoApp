@@ -86,13 +86,13 @@
         android:background="@color/support_separator" />
 
     <LinearLayout
-        android:id="@+id/delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/iv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="21dp"
@@ -100,6 +100,7 @@
             app:tint="@color/label_disable" />
 
         <TextView
+            android:id="@+id/tv_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
