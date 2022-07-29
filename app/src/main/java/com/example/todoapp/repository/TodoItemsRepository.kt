@@ -1,153 +1,17 @@
 package com.example.todoapp.repository
 
-import com.example.todoapp.models.Importance
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.todoapp.data.SourceData
 import com.example.todoapp.models.TodoItem
-import java.util.*
 
 class TodoItemsRepository {
-    fun getTodoItems() = todoItems.toList()
+    private val _todoItemsLiveData: MutableLiveData<MutableList<TodoItem>> = MutableLiveData(SourceData.todoItems)
+    val todoItemsLiveData: LiveData<MutableList<TodoItem>> = _todoItemsLiveData
+
+    fun getNumberOfTodoItems() = todoItemsLiveData.value?.size
 
     fun addNewTodoItem(case: TodoItem) {
-        todoItems.add(case)
-    }
-
-    companion object {
-        private val todoItems = mutableListOf(
-            TodoItem(
-                "1",
-                "Сходить к адвокату",
-                Importance.BASIC,
-                1658950803,
-                false,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "2",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "3",
-                "Написать огромное сочинение по русскому языку на тему: \"Как я классно провел лето и попал в школу мобильной разработки от Яндекса\" продолжение большой строки аааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааааа",
-                Importance.LOW,
-                1658950803,
-                false,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "4",
-                "Прогуляться",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "5",
-                "",
-                Importance.LOW,
-                1658950803,
-                false,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "6",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "7",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "8",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "9",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "10",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "11",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "12",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "13",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "14",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            ),
-            TodoItem(
-                "15",
-                "Почистить зубы",
-                Importance.IMPORTANT,
-                1658950803,
-                true,
-                1658949803,
-                1658950203
-            )
-        )
+        _todoItemsLiveData.value?.add(case)
     }
 }

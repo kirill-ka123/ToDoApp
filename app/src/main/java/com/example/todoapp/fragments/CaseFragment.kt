@@ -2,7 +2,6 @@ package com.example.todoapp.fragments
 
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.MainActivity
@@ -10,9 +9,7 @@ import com.example.todoapp.R
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.case_fragment.*
-import java.util.*
 
 class CaseFragment: Fragment(R.layout.case_fragment) {
     lateinit var todoItemsRepository: TodoItemsRepository
@@ -43,7 +40,7 @@ class CaseFragment: Fragment(R.layout.case_fragment) {
                 }
             }
             val todoItem = TodoItem(
-                (todoItemsRepository.getTodoItems().size + 1).toString(),
+                ((todoItemsRepository.getNumberOfTodoItems() ?: 0) + 1).toString(),
                 et_case.text.toString(),
                 importance,
                 1,
