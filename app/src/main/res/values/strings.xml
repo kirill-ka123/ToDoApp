@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ToDoApp</string>
     <string name="title">Мои дела</string>
-    <string name="number_of_completed">Выполнено - 5</string>
+    <string name="number_of_completed">Выполнено - %1$s</string>
     <string name="title_item">Купить что-то</string>
     <string name="what_needs_done">Что надо сделать…</string>
     <string name="make_up_to">Сделать до</string>

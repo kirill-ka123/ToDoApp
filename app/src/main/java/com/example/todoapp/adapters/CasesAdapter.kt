@@ -48,6 +48,11 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
                     it(todoItem)
                 }
             }
+            checkbox.setOnClickListener {
+                onCheckboxClickListener?.let {
+                    it(todoItem, checkbox.isChecked)
+                }
+            }
         }
     }
 
@@ -59,5 +64,11 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
 
     fun setOnItemClickListener(listener: (TodoItem) -> Unit) {
         onItemClickListener = listener
+    }
+
+    private var onCheckboxClickListener: ((TodoItem, isChecked: Boolean) -> Unit)? = null
+
+    fun setOnCheckboxClickListener(listener: (TodoItem, isChecked: Boolean) -> Unit) {
+        onCheckboxClickListener = listener
     }
 }

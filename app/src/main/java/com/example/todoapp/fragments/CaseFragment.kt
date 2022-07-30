@@ -1,7 +1,5 @@
 package com.example.todoapp.fragments
 
-import android.graphics.Color
-import android.graphics.Color.BLACK
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
@@ -64,14 +62,11 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                     System.currentTimeMillis() / 1000L
                 )
             } else {
-                newTodoItem = TodoItem(
-                    todoItem.id,
-                    et_case.text.toString(),
-                    importance,
-                    deadline,
-                    false,
-                    todoItem.created_at,
-                    System.currentTimeMillis() / 1000L
+                newTodoItem = todoItem.copy(
+                    text = et_case.text.toString(),
+                    importance = importance,
+                    deadline = deadline,
+                    changed_at = System.currentTimeMillis() / 1000L
                 )
             }
             todoItemsRepository.upsertTodoItem(newTodoItem)

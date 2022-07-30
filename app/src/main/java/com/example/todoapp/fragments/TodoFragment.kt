@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.MainActivity
 import com.example.todoapp.R
 import com.example.todoapp.adapters.CasesAdapter
+import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
 import kotlinx.android.synthetic.main.todo_fragment.*
 
@@ -26,6 +27,14 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         }
 
         todoItemsRepository.todoItemsLiveData.observe(viewLifecycleOwner) {
+            var numberOfCompleted = 0
+            it.forEach { todoItem ->
+                if (todoItem.done) {
+                    numberOfCompleted++
+                }
+            }
+            complete_title.text =
+                getString(R.string.number_of_completed, numberOfCompleted.toString())
             casesAdapter.differ.submitList(it.toList())
         }
     }
@@ -35,6 +44,10 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         casesAdapter.setOnItemClickListener { todoItem ->
             val bundle = bundleOf("case" to todoItem)
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment, bundle)
+        }
+        casesAdapter.setOnCheckboxClickListener { todoItem, isChecked ->
+            val newTodoItem = todoItem.copy(done = isChecked)
+            todoItemsRepository.upsertTodoItem(newTodoItem)
         }
         rv_cases.apply {
             adapter = casesAdapter
