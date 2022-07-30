@@ -20,4 +20,13 @@ class TodoItemsRepository {
         }
         _todoItemsLiveData.value?.add(updatedTodoItem)
     }
+
+    fun deleteTodoItem(item: TodoItem) {
+        _todoItemsLiveData.value?.forEachIndexed { index, todoItem ->
+            if (todoItem.id == item.id) {
+                _todoItemsLiveData.value?.removeAt(index)
+                return@deleteTodoItem
+            }
+        }
+    }
 }

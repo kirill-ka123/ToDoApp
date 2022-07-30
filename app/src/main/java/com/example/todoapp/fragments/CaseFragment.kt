@@ -1,8 +1,11 @@
 package com.example.todoapp.fragments
 
+import android.graphics.Color
+import android.graphics.Color.BLACK
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,27 +28,18 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         todoItemsRepository = (activity as MainActivity).todoItemsRepository
-        val todoItem = args.case
 
-        todoItem?.let {
-            et_case.setText(it.text)
-            spinner_importance.setSelection(convertImportanceToInt(it.importance))
-            if (it.deadline != null) {
-                switch_deadline.isChecked = true
-                tv_date.visibility = View.VISIBLE
-                tv_date.text = convertUnixToDate(it.deadline)
-            }
-        }
+        val todoItem = args.case
+        initViews(todoItem)
 
         iv_close.setOnClickListener {
             findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
-        iv_delete.setOnClickListener {
-            findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
-        }
-
-        tv_delete.setOnClickListener {
+        delete.setOnClickListener {
+            if (todoItem != null) {
+                todoItemsRepository.deleteTodoItem(todoItem)
+            }
             findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
@@ -62,7 +56,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             val newTodoItem: TodoItem
             if (todoItem == null) {
                 newTodoItem = TodoItem(
-                    ((todoItemsRepository.getNumberOfTodoItems() ?: 0) + 1).toString(),
+                    UUID.randomUUID().toString(),
                     et_case.text.toString(),
                     importance,
                     deadline,
@@ -141,5 +135,19 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
         val calendar: Calendar = Calendar.getInstance()
         calendar.timeInMillis = time * 1000
         return DateFormat.format("dd-MM-yyyy", calendar).toString()
+    }
+
+    private fun initViews(todoItem: TodoItem?) {
+        todoItem?.let {
+            et_case.setText(it.text)
+            spinner_importance.setSelection(convertImportanceToInt(it.importance))
+            if (it.deadline != null) {
+                switch_deadline.isChecked = true
+                tv_date.visibility = View.VISIBLE
+                tv_date.text = convertUnixToDate(it.deadline)
+            }
+            tv_delete.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            iv_delete.setColorFilter(ContextCompat.getColor(requireContext(), R.color.red))
+        }
     }
 }
