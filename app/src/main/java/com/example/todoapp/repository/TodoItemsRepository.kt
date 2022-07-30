@@ -11,7 +11,13 @@ class TodoItemsRepository {
 
     fun getNumberOfTodoItems() = todoItemsLiveData.value?.size
 
-    fun addNewTodoItem(case: TodoItem) {
-        _todoItemsLiveData.value?.add(case)
+    fun upsertTodoItem(updatedTodoItem: TodoItem) {
+        _todoItemsLiveData.value?.forEachIndexed { index, todoItem ->
+            if (todoItem.id == updatedTodoItem.id) {
+                _todoItemsLiveData.value?.set(index, updatedTodoItem)
+                return@upsertTodoItem
+            }
+        }
+        _todoItemsLiveData.value?.add(updatedTodoItem)
     }
 }

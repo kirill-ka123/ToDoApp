@@ -1,7 +1,6 @@
 package com.example.todoapp.models
 
 import java.io.Serializable
-import java.util.UUID
 
 data class TodoItem(
     val id: String,

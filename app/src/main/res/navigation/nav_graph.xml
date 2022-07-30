@@ -16,6 +16,11 @@
         android:id="@+id/caseFragment"
         android:name="com.example.todoapp.fragments.CaseFragment"
         android:label="CaseFragment">
+        <argument
+            android:name="case"
+            android:defaultValue="@null"
+            app:argType="com.example.todoapp.models.TodoItem"
+            app:nullable="true" />
         <action
             android:id="@+id/action_caseFragment_to_todoFragment"
             app:destination="@id/todoFragment"

@@ -38,10 +38,26 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
         holder.itemView.apply {
             checkbox.isChecked = todoItem.done
             tv_title_item.text = todoItem.text
+            tv_title_item.setOnClickListener {
+                onItemClickListener?.let {
+                    it(todoItem)
+                }
+            }
+            iv_info.setOnClickListener {
+                onItemClickListener?.let {
+                    it(todoItem)
+                }
+            }
         }
     }
 
     override fun getItemCount(): Int {
         return differ.currentList.size
+    }
+
+    private var onItemClickListener: ((TodoItem) -> Unit)? = null
+
+    fun setOnItemClickListener(listener: (TodoItem) -> Unit) {
+        onItemClickListener = listener
     }
 }

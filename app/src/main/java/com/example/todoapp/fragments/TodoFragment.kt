@@ -2,6 +2,7 @@ package com.example.todoapp.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,8 +13,8 @@ import com.example.todoapp.repository.TodoItemsRepository
 import kotlinx.android.synthetic.main.todo_fragment.*
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
-    lateinit var todoItemsRepository: TodoItemsRepository
-    lateinit var casesAdapter: CasesAdapter
+    private lateinit var todoItemsRepository: TodoItemsRepository
+    private lateinit var casesAdapter: CasesAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +32,10 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     private fun setupRecyclerView() {
         casesAdapter = CasesAdapter()
+        casesAdapter.setOnItemClickListener { todoItem ->
+            val bundle = bundleOf("case" to todoItem)
+            findNavController().navigate(R.id.action_todoFragment_to_caseFragment, bundle)
+        }
         rv_cases.apply {
             adapter = casesAdapter
             layoutManager = LinearLayoutManager(activity)
