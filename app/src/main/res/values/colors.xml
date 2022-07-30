@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
     <!-- Support colors -->
     <color name="support_separator">#33000000</color>
     <color name="support_overlay">#0F000000</color>

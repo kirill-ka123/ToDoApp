@@ -1,7 +1,6 @@
 package com.example.todoapp.fragments
 
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +15,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.case_fragment.*
+import java.text.DateFormat
 import java.util.*
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
@@ -98,11 +98,11 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             deadline = null
         }
 
-        datePicker.addOnPositiveButtonClickListener {
+        datePicker.addOnPositiveButtonClickListener { selection ->
             tv_date.apply {
-                deadline = it / 1000L
+                deadline = selection / 1000L
                 visibility = View.VISIBLE
-                text = datePicker.headerText
+                text = convertUnixToDate(selection / 1000L)
             }
         }
 
@@ -129,7 +129,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
     private fun convertUnixToDate(time: Long): String {
         val calendar: Calendar = Calendar.getInstance()
         calendar.timeInMillis = time * 1000
-        return DateFormat.format("dd-MM-yyyy", calendar).toString()
+        return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.time)
     }
 
     private fun initViews(todoItem: TodoItem?) {
