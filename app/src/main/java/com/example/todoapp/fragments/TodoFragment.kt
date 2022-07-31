@@ -5,11 +5,12 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.MainActivity
 import com.example.todoapp.R
 import com.example.todoapp.adapters.CasesAdapter
-import com.example.todoapp.models.TodoItem
+import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.repository.TodoItemsRepository
 import kotlinx.android.synthetic.main.todo_fragment.*
 
@@ -37,6 +38,10 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 getString(R.string.number_of_completed, numberOfCompleted.toString())
             casesAdapter.differ.submitList(it.toList())
         }
+
+        val itemTouchHelperCallback =
+            ItemTouchHelperCallback(todoItemsRepository, casesAdapter, view)
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rv_cases)
     }
 
     private fun setupRecyclerView() {

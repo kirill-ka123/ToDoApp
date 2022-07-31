@@ -39,4 +39,12 @@ class TodoItemsRepository {
             }
         }
     }
+
+    fun addTodoItemUsingIndex(newTodoItem: TodoItem, index: Int) {
+        _todoItemsLiveData.value?.let {
+            val newList = it
+            newList.add(index, newTodoItem)
+            _todoItemsLiveData.value = newList
+        }
+    }
 }
