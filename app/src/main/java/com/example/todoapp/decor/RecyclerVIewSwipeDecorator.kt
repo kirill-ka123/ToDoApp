@@ -33,7 +33,7 @@ class RecyclerVIewSwipeDecorator(
     fun decorate() {
         try {
             if (actionState != ItemTouchHelper.ACTION_STATE_SWIPE) return
-            if (dX > 0) {
+            if (dX > 0 && dX < viewHolder.itemView.right) {
                 // Swiping Right
                 canvas.clipRect(
                     viewHolder.itemView.left,
@@ -82,7 +82,7 @@ class RecyclerVIewSwipeDecorator(
                         icon.draw(canvas)
                     }
                 }
-            } else if (dX < 0) {
+            } else if (dX > -viewHolder.itemView.right && dX < 0) {
                 // Swiping Left
                 canvas.clipRect(
                     viewHolder.itemView.right + dX.toInt(),

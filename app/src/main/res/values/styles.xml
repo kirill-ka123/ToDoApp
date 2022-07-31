@@ -10,6 +10,18 @@
         </item>
     </style>
 
+    <style name="titleInToolbar" parent="android:TextAppearance">
+        <item name="android:textSize">
+            20sp
+        </item>
+        <item name="android:letterSpacing">
+            0.03
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+    </style>
+
     <style name="number_of_completed">
         <item name="android:textSize">
             16sp

@@ -13,17 +13,22 @@ class TodoItemsRepository {
     fun getNumberOfTodoItems() = todoItemsLiveData.value?.size
 
     fun upsertTodoItem(newTodoItem: TodoItem) {
-        _todoItemsLiveData.value?.let {
-            val newList = it
-            newList.forEachIndexed { index, todoItem ->
-                if (todoItem.id == newTodoItem.id) {
+        val list = _todoItemsLiveData.value
+        if (list != null) {
+            val newList = list!!
+            var index = 0
+            while (index < newList.size && newTodoItem.id.toInt() >= newList[index].id.toInt()) {
+                if (newTodoItem.id.toInt() == newList[index].id.toInt()) {
                     newList[index] = newTodoItem
                     _todoItemsLiveData.value = newList
-                    return@upsertTodoItem
+                    return
                 }
+                index++
             }
-            newList.add(newTodoItem)
+            newList.add(index, newTodoItem)
             _todoItemsLiveData.value = newList
+        } else {
+            _todoItemsLiveData.value = mutableListOf(newTodoItem)
         }
     }
 
@@ -40,11 +45,5 @@ class TodoItemsRepository {
         }
     }
 
-    fun addTodoItemUsingIndex(newTodoItem: TodoItem, index: Int) {
-        _todoItemsLiveData.value?.let {
-            val newList = it
-            newList.add(index, newTodoItem)
-            _todoItemsLiveData.value = newList
-        }
-    }
+    fun getTodoItems() = _todoItemsLiveData.value?.toList()
 }

@@ -9,6 +9,7 @@ import com.example.todoapp.R
 import com.example.todoapp.adapters.CasesAdapter
 import com.example.todoapp.repository.TodoItemsRepository
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.todo_item.view.*
 
 class ItemTouchHelperCallback(
     private val todoItemsRepository: TodoItemsRepository,
@@ -30,19 +31,21 @@ class ItemTouchHelperCallback(
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
         val todoItem = casesAdapter.differ.currentList[position]
-        todoItemsRepository.deleteTodoItem(todoItem)
 
-        val message = when (rightOrLeft) {
-            true -> "Дело выполнено"
-            false -> "Дело успешно удалено"
-            else -> throw IllegalArgumentException()
-        }
-
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).apply {
-            setAction("Отмена") {
-                todoItemsRepository.addTodoItemUsingIndex(todoItem, position)
+        when (rightOrLeft) {
+            true -> {
+                val newTodoItem = todoItem.copy(done = !viewHolder.itemView.checkbox.isChecked)
+                todoItemsRepository.upsertTodoItem(newTodoItem)
             }
-            show()
+            false -> {
+                todoItemsRepository.deleteTodoItem(todoItem)
+                Snackbar.make(view, "Дело успешно удалено", Snackbar.LENGTH_LONG).apply {
+                    setAction("Отмена") {
+                        todoItemsRepository.upsertTodoItem(todoItem)
+                    }
+                    show()
+                }
+            }
         }
     }
 

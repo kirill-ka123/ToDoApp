@@ -54,7 +54,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             val newTodoItem: TodoItem
             if (todoItem == null) {
                 newTodoItem = TodoItem(
-                    UUID.randomUUID().toString(),
+                    todoItemsRepository.getNumberOfTodoItems().toString(),
                     et_case.text.toString(),
                     importance,
                     deadline,

@@ -6,7 +6,7 @@ import com.example.todoapp.models.TodoItem
 object SourceData {
     val todoItems = mutableListOf(
         TodoItem(
-            "1",
+            "0",
             "Сходить к адвокату",
             Importance.BASIC,
             1658950803,
@@ -15,7 +15,7 @@ object SourceData {
             1658950203
         ),
         TodoItem(
-            "2",
+            "1",
             "Почистить зубы",
             Importance.IMPORTANT,
             1658950803,
@@ -24,7 +24,7 @@ object SourceData {
             1658950203
         ),
         TodoItem(
-            "3",
+            "2",
             "Написать огромное сочинение по русскому языку на тему: \"Как я классно провел лето и попал в школу мобильной разработки от Яндекса\"",
             Importance.LOW,
             1658950803,
@@ -33,7 +33,7 @@ object SourceData {
             1658950203
         ),
         TodoItem(
-            "4",
+            "3",
             "Прогуляться",
             Importance.IMPORTANT,
             1658950803,
@@ -42,11 +42,20 @@ object SourceData {
             1658950203
         ),
         TodoItem(
-            "5",
+            "4",
             "",
             Importance.LOW,
             1658950803,
             false,
+            1658949803,
+            1658950203
+        ),
+        TodoItem(
+            "5",
+            "Почистить зубы",
+            Importance.IMPORTANT,
+            1658950803,
+            true,
             1658949803,
             1658950203
         ),
@@ -124,15 +133,6 @@ object SourceData {
         ),
         TodoItem(
             "14",
-            "Почистить зубы",
-            Importance.IMPORTANT,
-            1658950803,
-            true,
-            1658949803,
-            1658950203
-        ),
-        TodoItem(
-            "15",
             "Почистить зубы",
             Importance.IMPORTANT,
             1658950803,
