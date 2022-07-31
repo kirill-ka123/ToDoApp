@@ -7,6 +7,12 @@
     <string name="make_up_to">Сделать до</string>
     <string name="delete">Удалить</string>
     <string name="save">СОХРАНИТЬ</string>
+    <string name="cancel">Отмена</string>
+    <string name="toast_empty_text">Поле \"Что надо сделать…\" не может быть пустым</string>
+    <string name="case_was_deleted">Дело успешно удалено</string>
+    <string name="no">Нет</string>
+    <string name="low">Низкий</string>
+    <string name="important">Высокий</string>
     <string-array name="importance">
         <item>Нет</item>
         <item>Низкий</item>

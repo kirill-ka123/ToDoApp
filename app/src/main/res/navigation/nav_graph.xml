@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/todoFragment"
-        android:name="com.example.todoapp.fragments.TodoFragment"
+        android:name="com.example.todoapp.ui.fragments.TodoFragment"
         android:label="TodoFragment">
         <action
             android:id="@+id/action_todoFragment_to_caseFragment"
@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/caseFragment"
-        android:name="com.example.todoapp.fragments.CaseFragment"
+        android:name="com.example.todoapp.ui.fragments.CaseFragment"
         android:label="CaseFragment">
         <argument
             android:name="case"

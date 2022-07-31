@@ -11,20 +11,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:theme="@style/colored_checkbox" />
+        android:theme="@style/green_checkbox" />
 
-    <TextView
-        android:id="@+id/tv_title_item"
+    <ImageView
+        android:id="@+id/iv_importance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:visibility="gone" />
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_weight="1"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:text="@string/title_item"
-        android:textAppearance="@style/title_item" />
+        android:layout_marginEnd="15dp">
+
+        <TextView
+            android:id="@+id/tv_title_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@string/title_item"
+            android:textAppearance="@style/title_item" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textAppearance="@style/date_item" />
+
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_info"

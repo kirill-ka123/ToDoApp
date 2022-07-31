@@ -40,6 +40,15 @@
         </item>
     </style>
 
+    <style name="date_item">
+        <item name="android:textSize">
+            14sp
+        </item>
+        <item name="android:textColor">
+            @color/label_tertiary
+        </item>
+    </style>
+
     <style name="make_up_to">
         <item name="android:textSize">
             16sp
@@ -79,12 +88,21 @@
         </item>
     </style>
 
-    <style name="colored_checkbox" parent="Theme.AppCompat.Light">
+    <style name="green_checkbox" parent="Theme.AppCompat.Light">
         <item name="colorAccent">
             @color/green
         </item>
         <item name="android:textColorSecondary">
             @color/label_tertiary
+        </item>
+    </style>
+
+    <style name="red_checkbox" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">
+            @color/green
+        </item>
+        <item name="android:textColorSecondary">
+            @color/red
         </item>
     </style>
 

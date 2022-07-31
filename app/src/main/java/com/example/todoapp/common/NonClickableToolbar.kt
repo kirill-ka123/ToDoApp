@@ -18,6 +18,7 @@ class NonClickableToolbar(
         defStyleAttr,
         0
     )
+
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 

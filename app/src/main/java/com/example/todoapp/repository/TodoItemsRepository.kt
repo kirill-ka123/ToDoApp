@@ -2,15 +2,12 @@ package com.example.todoapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.todoapp.data.SourceData
 import com.example.todoapp.models.TodoItem
 
-class TodoItemsRepository {
+class TodoItemsRepository(todoItems: MutableList<TodoItem>) {
     private val _todoItemsLiveData: MutableLiveData<MutableList<TodoItem>> =
-        MutableLiveData(SourceData.todoItems)
+        MutableLiveData(todoItems)
     val todoItemsLiveData: LiveData<MutableList<TodoItem>> = _todoItemsLiveData
-
-    fun getNumberOfTodoItems() = todoItemsLiveData.value?.size
 
     fun upsertTodoItem(newTodoItem: TodoItem) {
         val list = _todoItemsLiveData.value
