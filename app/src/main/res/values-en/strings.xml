@@ -14,6 +14,7 @@
     <string name="no">No</string>
     <string name="low">Low</string>
     <string name="important">Important</string>
+    <string name="importance">Importance</string>
     <string-array name="importance">
         <item>No</item>
         <item>Low</item>

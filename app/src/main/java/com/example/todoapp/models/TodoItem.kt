@@ -6,8 +6,8 @@ data class TodoItem(
     val id: String,
     val text: String,
     val importance: Importance,
-    val deadline: Long? = null,
+    val deadline: Long = 0L,
     val done: Boolean,
-    val created_at: Long,
-    val changed_at: Long? = null
+    val createdAt: Long,
+    val changedAt: Long = 0L
 ) : Serializable

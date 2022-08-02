@@ -11,11 +11,12 @@
     <string name="toast_empty_text">Поле \"Что надо сделать…\" не может быть пустым</string>
     <string name="case_was_deleted">Дело успешно удалено</string>
     <string name="no">Нет</string>
-    <string name="low">Низкий</string>
-    <string name="important">Высокий</string>
+    <string name="low">Низкая</string>
+    <string name="important">Высокая</string>
+    <string name="importance">Важность</string>
     <string-array name="importance">
         <item>Нет</item>
-        <item>Низкий</item>
-        <item>Высокий</item>
+        <item>Низкая</item>
+        <item>Высокая</item>
     </string-array>
 </resources>

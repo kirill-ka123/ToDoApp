@@ -19,27 +19,4 @@ class TodoViewModel(private val todoItemsRepository: TodoItemsRepository) : View
     fun getTodoItemsLiveData() = todoItemsRepository.todoItemsLiveData
 
     fun getTodoItems() = todoItemsRepository.getTodoItems()
-
-    fun convertStringToImportance(str: String, view: View) =
-        when (str) {
-            view.resources.getString(R.string.no) -> Importance.BASIC
-            view.resources.getString(R.string.low) -> Importance.LOW
-            view.resources.getString(R.string.important) -> Importance.IMPORTANT
-            else -> {
-                throw IllegalArgumentException()
-            }
-        }
-
-    fun convertImportanceToInt(importance: Importance) =
-        when (importance) {
-            Importance.BASIC -> 0
-            Importance.LOW -> 1
-            Importance.IMPORTANT -> 2
-        }
-
-    fun convertUnixToDate(time: Long): String {
-        val calendar: Calendar = Calendar.getInstance()
-        calendar.timeInMillis = time * 1000
-        return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.time)
-    }
 }

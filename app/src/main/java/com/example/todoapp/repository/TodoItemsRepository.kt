@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import com.example.todoapp.models.TodoItem
 
 class TodoItemsRepository(todoItems: MutableList<TodoItem>) {
-    private val _todoItemsLiveData: MutableLiveData<MutableList<TodoItem>> =
+    private val _todoItemsLiveData: MutableLiveData<List<TodoItem>> =
         MutableLiveData(todoItems)
-    val todoItemsLiveData: LiveData<MutableList<TodoItem>> = _todoItemsLiveData
+    val todoItemsLiveData: LiveData<List<TodoItem>> = _todoItemsLiveData
 
     fun upsertTodoItem(newTodoItem: TodoItem) {
         val list = _todoItemsLiveData.value
-        if (list != null) {
-            val newList = list!!
+        list?.let {
+            val newList = it.toMutableList()
             var index = 0
             while (index < newList.size && newTodoItem.id.toInt() >= newList[index].id.toInt()) {
                 if (newTodoItem.id.toInt() == newList[index].id.toInt()) {
@@ -24,14 +24,16 @@ class TodoItemsRepository(todoItems: MutableList<TodoItem>) {
             }
             newList.add(index, newTodoItem)
             _todoItemsLiveData.value = newList
-        } else {
+        }
+
+        if (list == null) {
             _todoItemsLiveData.value = mutableListOf(newTodoItem)
         }
     }
 
     fun deleteTodoItem(item: TodoItem) {
         _todoItemsLiveData.value?.let {
-            val newList = it
+            val newList = it.toMutableList()
             newList.forEachIndexed { index, todoItem ->
                 if (todoItem.id == item.id) {
                     newList.removeAt(index)

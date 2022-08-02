@@ -6,13 +6,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.adapters.CasesAdapter
+import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModel.TodoViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_item.view.*
 
 class ItemTouchHelperCallback(
-    private val todoViewModel: TodoViewModel,
+    private val todoViewModel: TodoViewModel?,
     private val casesAdapter: CasesAdapter,
     private val view: View
 ) : ItemTouchHelper.SimpleCallback(
@@ -35,17 +35,17 @@ class ItemTouchHelperCallback(
         when (rightOrLeft) {
             true -> {
                 val newTodoItem = todoItem.copy(done = !viewHolder.itemView.checkbox.isChecked)
-                todoViewModel.saveTodoItem(newTodoItem)
+                todoViewModel?.saveTodoItem(newTodoItem)
             }
             false -> {
-                todoViewModel.deleteTodoItem(todoItem)
+                todoViewModel?.deleteTodoItem(todoItem)
                 Snackbar.make(
                     view,
                     view.resources.getString(R.string.case_was_deleted),
                     Snackbar.LENGTH_LONG
                 ).apply {
                     setAction(view.resources.getString(R.string.cancel)) {
-                        todoViewModel.saveTodoItem(todoItem)
+                        todoViewModel?.saveTodoItem(todoItem)
                     }
                     show()
                 }

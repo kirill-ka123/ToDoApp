@@ -14,7 +14,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed">
@@ -31,7 +31,7 @@
                 app:layout_collapseMode="pin">
 
                 <ImageView
-                    android:id="@+id/iv_close"
+                    android:id="@+id/ivClose"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -45,7 +45,7 @@
                     android:layout_weight="1" />
 
                 <TextView
-                    android:id="@+id/tv_save"
+                    android:id="@+id/tvSave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -58,7 +58,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -70,7 +70,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/et_case"
+                android:id="@+id/etCase"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -81,12 +81,22 @@
                 android:minLines="3"
                 android:padding="16dp" />
 
-            <Spinner
-                android:id="@+id/spinner_importance"
+            <TextView
+                android:id="@+id/tv_importance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
+                android:text="@string/importance"
+                android:textAppearance="@style/importance" />
+
+            <Spinner
+                android:id="@+id/spinnerImportance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:background="@null"
                 android:entries="@array/importance" />
 
             <View
@@ -98,7 +108,7 @@
                 android:background="@color/support_separator" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switch_deadline"
+                android:id="@+id/switchDeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -110,7 +120,7 @@
                 android:theme="@style/colored_switch" />
 
             <TextView
-                android:id="@+id/tv_date"
+                android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -120,7 +130,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:background="@color/support_separator" />
 
             <LinearLayout
@@ -128,11 +138,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="22dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="60dp"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/iv_delete"
+                    android:id="@+id/ivDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
@@ -140,7 +150,7 @@
                     app:tint="@color/label_disable" />
 
                 <TextView
-                    android:id="@+id/tv_delete"
+                    android:id="@+id/tvDelete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"

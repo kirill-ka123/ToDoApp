@@ -106,6 +106,34 @@
         </item>
     </style>
 
+    <style name="importance">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+
+    </style>
+
+    <style name="spinner_title">
+        <item name="android:textSize">
+            14sp
+        </item>
+        <item name="android:textColor">
+            @color/label_tertiary
+        </item>
+    </style>
+
+    <style name="spinner_dropdown">
+        <item name="android:textSize">
+            16sp
+        </item>
+        <item name="android:textColor">
+            @color/label_primary
+        </item>
+    </style>
+
     <style name="colored_switch" parent="Theme.AppCompat.Light">
         <item name="colorSwitchThumbNormal">@color/back_elevated</item>
         <item name="colorControlActivated">@color/blue</item>
