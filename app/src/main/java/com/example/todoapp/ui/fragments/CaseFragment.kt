@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
@@ -20,6 +21,7 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.case_fragment.*
+import kotlinx.coroutines.cancelChildren
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
     private val caseViewModel: CaseViewModel by viewModels {
@@ -79,9 +81,9 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        //todoViewModel = null
+    override fun onDestroyView() {
+        super.onDestroyView()
+        caseViewModel.viewModelScope.coroutineContext.cancelChildren()
         deadline = 0L
     }
 

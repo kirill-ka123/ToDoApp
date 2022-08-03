@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModelFactory
 import kotlinx.android.synthetic.main.todo_fragment.*
+import kotlinx.coroutines.cancelChildren
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val todoViewModel: TodoViewModel by viewModels {
@@ -29,6 +31,12 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment)
+        }
+
+        if (todoViewModel.visibleOrInvisible == "visible") {
+            ivVisibility.setImageResource(R.drawable.ic_visibility_off)
+        } else {
+            ivVisibility.setImageResource(R.drawable.ic_visibility)
         }
 
         ivVisibility.setOnClickListener {
@@ -52,6 +60,12 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoItems))
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        todoViewModel.viewModelScope.coroutineContext.cancelChildren()
+        casesAdapter = null
     }
 
     private fun setupRecyclerView(view: View) {
