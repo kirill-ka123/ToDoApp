@@ -6,24 +6,23 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="transparent">#00000000</color>
     <!-- Support colors -->
-    <color name="support_separator">#33000000</color>
-    <color name="support_overlay">#0F000000</color>
+    <color name="support_separator">#33FFFFFF</color>
+    <color name="support_overlay">#52000000</color>
     <!-- Text colors -->
-    <color name="label_primary">#000000</color>
-    <color name="label_secondary">#99000000</color>
-    <color name="label_tertiary">#4D000000</color>
-    <color name="label_disable">#26000000</color>
+    <color name="label_primary">#FFFFFF</color>
+    <color name="label_secondary">#99FFFFFF</color>
+    <color name="label_tertiary">#66FFFFFF</color>
+    <color name="label_disable">#26FFFFFF</color>
     <!-- Colors -->
     <color name="red">#FF3B30</color>
     <color name="green">#34C759</color>
     <color name="blue">#007AFF</color>
     <color name="gray">#8E8E93</color>
-    <color name="gray_light">#D1D1D6</color>
+    <color name="gray_light">#48484A</color>
     <color name="white">#FFFFFF</color>
     <!-- Background colors -->
-    <color name="back_primary">#F7F6F2</color>
-    <color name="back_secondary">#FFFFFF</color>
-    <color name="back_elevated">#FFFFFF</color>
+    <color name="back_primary">#161618</color>
+    <color name="back_secondary">#252528</color>
+    <color name="back_elevated">#3C3C3F</color>
 </resources>

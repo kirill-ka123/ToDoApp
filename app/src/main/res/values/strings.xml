@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">ToDoApp</string>
+    <string name="title">Мои дела</string>
+    <string name="number_of_completed">Выполнено - %1$s</string>
+    <string name="title_item">Купить что-то</string>
+    <string name="what_needs_done">Что надо сделать…</string>
+    <string name="make_up_to">Сделать до</string>
+    <string name="delete">Удалить</string>
+    <string name="save">СОХРАНИТЬ</string>
+    <string name="cancel">Отмена</string>
+    <string name="toast_empty_text">Поле \"Что надо сделать…\" не может быть пустым</string>
+    <string name="case_was_deleted">Дело успешно удалено</string>
+    <string name="no">Нет</string>
+    <string name="low">Низкая</string>
+    <string name="important">Высокая</string>
+    <string name="importance">Важность</string>
+    <string-array name="importance">
+        <item>Нет</item>
+        <item>Низкая</item>
+        <item>Высокая</item>
+    </string-array>
 </resources>

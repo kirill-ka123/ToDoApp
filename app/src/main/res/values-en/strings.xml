@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="title">My cases</string>
+    <string name="number_of_completed">Completed - %1$s</string>
+    <string name="title_item">Buy something</string>
+    <string name="what_needs_done">What to do…</string>
+    <string name="make_up_to">Do it before</string>
+    <string name="delete">Delete</string>
+    <string name="save">SAVE</string>
+    <string name="cancel">Cancel</string>
+    <string name="toast_empty_text">The field \"What to do…\" cannot be empty</string>
+    <string name="case_was_deleted">The case was successfully deleted</string>
+    <string name="no">No</string>
+    <string name="low">Low</string>
+    <string name="important">Important</string>
+    <string name="importance">Importance</string>
+    <string-array name="importance">
+        <item>No</item>
+        <item>Low</item>
+        <item>Important</item>
+    </string-array>
+</resources>

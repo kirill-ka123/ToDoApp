@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/todoFragment">
+
+    <fragment
+        android:id="@+id/todoFragment"
+        android:name="com.example.todoapp.ui.fragments.TodoFragment"
+        android:label="TodoFragment">
+        <action
+            android:id="@+id/action_todoFragment_to_caseFragment"
+            app:destination="@id/caseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/caseFragment"
+        android:name="com.example.todoapp.ui.fragments.CaseFragment"
+        android:label="CaseFragment">
+        <argument
+            android:name="case"
+            android:defaultValue="@null"
+            app:argType="com.example.todoapp.models.TodoItem"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_caseFragment_to_todoFragment"
+            app:destination="@id/todoFragment"
+            app:popUpTo="@id/todoFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

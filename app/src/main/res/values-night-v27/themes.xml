@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_200</item>
@@ -16,5 +17,6 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/back_primary</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="l">false</item>
     </style>
 </resources>
