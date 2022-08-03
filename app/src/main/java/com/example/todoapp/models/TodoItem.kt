@@ -3,7 +3,7 @@ package com.example.todoapp.models
 import java.io.Serializable
 
 data class TodoItem(
-    val id: String,
+    var id: String,
     val text: String,
     val importance: Importance,
     val deadline: Long = 0L,

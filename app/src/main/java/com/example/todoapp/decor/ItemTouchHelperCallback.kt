@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.ui.adapters.CasesAdapter
-import com.example.todoapp.ui.viewModel.TodoViewModel
+import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_item.view.*
 

@@ -81,21 +81,12 @@
                 android:minLines="3"
                 android:padding="16dp" />
 
-            <TextView
-                android:id="@+id/tv_importance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="28dp"
-                android:text="@string/importance"
-                android:textAppearance="@style/importance" />
-
             <Spinner
                 android:id="@+id/spinnerImportance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="28dp"
                 android:background="@null"
                 android:entries="@array/importance" />
 

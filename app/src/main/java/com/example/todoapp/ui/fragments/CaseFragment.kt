@@ -6,40 +6,45 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
 import com.example.todoapp.common.Utils
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
-import com.example.todoapp.ui.MainActivity
-import com.example.todoapp.ui.viewModel.TodoViewModel
+import com.example.todoapp.repository.TodoItemsRepository
+import com.example.todoapp.ui.viewModels.caseViewModel.CaseViewModel
+import com.example.todoapp.ui.viewModels.caseViewModel.CaseViewModelFactory
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.case_fragment.*
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
-    private var todoViewModel: TodoViewModel? = null
+    private val caseViewModel: CaseViewModel by viewModels {
+        CaseViewModelFactory(TodoItemsRepository.getRepository())
+    }
     private val args: CaseFragmentArgs by navArgs()
     private var deadline: Long = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        todoViewModel = (activity as MainActivity).todoViewModel
 
         val todoItem = args.case
         initViews(todoItem)
 
         ivClose.setOnClickListener {
-            findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
+            findNavController().popBackStack()
+            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         delete.setOnClickListener {
             if (todoItem != null) {
-                todoViewModel?.deleteTodoItem(todoItem)
+                caseViewModel.deleteTodoItem(todoItem)
             }
-            findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
+            findNavController().popBackStack()
+            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         switchDeadline.setOnCheckedChangeListener { _, isChecked ->
@@ -54,42 +59,47 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
         tvSave.setOnClickListener {
             val importance =
                 Utils.convertStringIdToImportance(spinnerImportance.selectedItemPosition)
-            val newTodoItem: TodoItem
             if (todoItem == null) {
                 if (etCase.text.toString() != "") {
-                    newTodoItem = TodoItem(
-                        todoViewModel?.getTodoItems()?.size.toString(),
-                        etCase.text.toString(),
-                        importance,
-                        deadline,
-                        false,
-                        System.currentTimeMillis() / 1000L
-                    )
-                    todoViewModel?.saveTodoItem(newTodoItem)
-                    findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
+                    val newTodoItem = createNewTodoItem(importance)
+                    caseViewModel.saveTodoItem(newTodoItem)
+                    findNavController().popBackStack()
+                    //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
                 } else Toast.makeText(
                     requireContext(),
                     getString(R.string.toast_empty_text),
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                newTodoItem = todoItem.copy(
-                    text = etCase.text.toString(),
-                    importance = importance,
-                    deadline = deadline,
-                    changedAt = System.currentTimeMillis() / 1000L
-                )
-                todoViewModel?.saveTodoItem(newTodoItem)
-                findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
+                val changedTodoItem = changeTodoItem(todoItem, importance)
+                caseViewModel.saveTodoItem(changedTodoItem)
+                findNavController().popBackStack()
+                //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
             }
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        todoViewModel = null
+        //todoViewModel = null
         deadline = 0L
     }
+
+    private fun createNewTodoItem(importance: Importance) = TodoItem(
+        "",
+        etCase.text.toString(),
+        importance,
+        deadline,
+        false,
+        System.currentTimeMillis() / 1000L
+    )
+
+    private fun changeTodoItem(todoItem: TodoItem, importance: Importance) = todoItem.copy(
+        text = etCase.text.toString(),
+        importance = importance,
+        deadline = deadline,
+        changedAt = System.currentTimeMillis() / 1000L
+    )
 
     private fun showDatePickerDialog() {
         val calendarConstraints = CalendarConstraints.Builder().run {
@@ -133,12 +143,12 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             Importance.IMPORTANT -> 2
         }
 
-
     private fun initViews(todoItem: TodoItem?) {
-        val adapter = ArrayAdapter.createFromResource(
+        val adapter = ArrayAdapter(
             requireContext(),
-            R.array.importance,
-            R.layout.spinner_layout
+            R.layout.spinner_layout,
+            R.id.tvSpinner,
+            listOf(getString(R.string.no), getString(R.string.low), getString(R.string.important))
         )
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout)
         spinnerImportance.adapter = adapter
