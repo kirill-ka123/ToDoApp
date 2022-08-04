@@ -1,5 +1,6 @@
 package com.example.todoapp.models
 
+import com.example.todoapp.network.models.TodoItemNetwork
 import java.io.Serializable
 
 data class TodoItem(
@@ -10,4 +11,16 @@ data class TodoItem(
     val done: Boolean,
     val createdAt: Long,
     val changedAt: Long = 0L
-) : Serializable
+) : Serializable {
+    fun mapToTodoItemNetwork(id: String) = TodoItemNetwork(
+        id,
+        text,
+        importance.name.lowercase(),
+        deadline,
+        done,
+        "#FFFFFF",
+        createdAt,
+        changedAt,
+        "model"
+    )
+}

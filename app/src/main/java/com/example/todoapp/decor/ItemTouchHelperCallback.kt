@@ -35,17 +35,17 @@ class ItemTouchHelperCallback(
         when (rightOrLeft) {
             true -> {
                 val newTodoItem = todoItem.copy(done = !viewHolder.itemView.checkbox.isChecked)
-                todoViewModel?.saveTodoItem(newTodoItem)
+                todoViewModel?.putTodoItemNetwork(newTodoItem)
             }
             false -> {
-                todoViewModel?.deleteTodoItem(todoItem)
+                todoViewModel?.deleteTodoItemNetwork(todoItem)
                 Snackbar.make(
                     view,
                     view.resources.getString(R.string.case_was_deleted),
                     Snackbar.LENGTH_LONG
                 ).apply {
                     setAction(view.resources.getString(R.string.cancel)) {
-                        todoViewModel?.saveTodoItem(todoItem)
+                        todoViewModel?.postTodoItemNetwork(todoItem, todoItem.id)
                     }
                     show()
                 }

@@ -1,6 +1,7 @@
 package com.example.todoapp.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -21,7 +22,7 @@ import kotlinx.coroutines.cancelChildren
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val todoViewModel: TodoViewModel by viewModels {
-        TodoViewModelFactory(TodoItemsRepository.getRepository())
+        TodoViewModelFactory(requireActivity().application, TodoItemsRepository.getRepository())
     }
     private var casesAdapter: CasesAdapter? = null
 
@@ -47,7 +48,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 ivVisibility.setImageResource(R.drawable.ic_visibility_off)
                 todoViewModel.visibleOrInvisible = "visible"
             }
-            todoViewModel.getTodoItems()
+            todoViewModel.refreshLiveData()
         }
 
         todoViewModel.getTodoItemsLive().observe(viewLifecycleOwner) { todoItems ->
@@ -77,7 +78,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             }
             casesAdapter.setOnCheckboxClickListener { todoItem, isChecked ->
                 val newTodoItem = todoItem.copy(done = isChecked)
-                todoViewModel.saveTodoItem(newTodoItem)
+                todoViewModel.putTodoItemNetwork(newTodoItem)
             }
             val itemTouchHelperCallback =
                 ItemTouchHelperCallback(todoViewModel, casesAdapter, view)

@@ -14,7 +14,6 @@ import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 import kotlinx.android.synthetic.main.todo_item.view.*
 
-
 class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
     class CasesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(
@@ -43,7 +42,11 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
                     }
                 }
                 if (todoItem.deadline > 0L) {
-                    setTodoItemDeadline(Utils.convertUnixToDate(todoItem.deadline))
+                    tvDate.visibility = View.VISIBLE
+                    tvDate.text = Utils.convertUnixToDate(todoItem.deadline)
+                } else {
+                    tvDate.visibility = View.GONE
+                    tvDate.text = ""
                 }
                 if (checkbox.isChecked) {
                     setTodoItemGreenCheckbox()
@@ -113,13 +116,6 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
             }
         }
 
-        private fun setTodoItemDeadline(deadline: String) {
-            itemView.apply {
-                tvDate.visibility = View.VISIBLE
-                tvDate.text = deadline
-            }
-        }
-
         private fun setTodoItemGreenCheckbox() {
             itemView.apply {
                 checkbox.buttonTintList =
@@ -173,7 +169,7 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
         }
 
         override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
-            return oldItem == newItem
+            return oldItem == newItem && oldItem.done == newItem.done
         }
     }
 

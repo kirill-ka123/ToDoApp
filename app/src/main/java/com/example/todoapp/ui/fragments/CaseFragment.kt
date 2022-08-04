@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
+import com.example.todoapp.common.CaseResource
 import com.example.todoapp.common.Utils
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
@@ -25,7 +26,7 @@ import kotlinx.coroutines.cancelChildren
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
     private val caseViewModel: CaseViewModel by viewModels {
-        CaseViewModelFactory(TodoItemsRepository.getRepository())
+        CaseViewModelFactory(requireActivity().application, TodoItemsRepository.getRepository())
     }
     private val args: CaseFragmentArgs by navArgs()
     private var deadline: Long = 0L
@@ -38,15 +39,13 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
         ivClose.setOnClickListener {
             findNavController().popBackStack()
-            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         delete.setOnClickListener {
             if (todoItem != null) {
-                caseViewModel.deleteTodoItem(todoItem)
+                caseViewModel.deleteTodoItemNetwork(todoItem)
             }
             findNavController().popBackStack()
-            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         switchDeadline.setOnCheckedChangeListener { _, isChecked ->
@@ -64,9 +63,8 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             if (todoItem == null) {
                 if (etCase.text.toString() != "") {
                     val newTodoItem = createNewTodoItem(importance)
-                    caseViewModel.saveTodoItem(newTodoItem)
+                    caseViewModel.postTodoItemNetwork(newTodoItem)
                     findNavController().popBackStack()
-                    //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
                 } else Toast.makeText(
                     requireContext(),
                     getString(R.string.toast_empty_text),
@@ -74,9 +72,8 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                 ).show()
             } else {
                 val changedTodoItem = changeTodoItem(todoItem, importance)
-                caseViewModel.saveTodoItem(changedTodoItem)
+                caseViewModel.putTodoItemNetwork(changedTodoItem)
                 findNavController().popBackStack()
-                //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
             }
         }
     }
