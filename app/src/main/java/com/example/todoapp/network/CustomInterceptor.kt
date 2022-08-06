@@ -18,7 +18,18 @@ class CustomInterceptor(context: Context) : Interceptor {
             requestBuilder
                 .addHeader("X-Last-Known-Revision", revision.toString())
         }
+        Log.d("qwer", "weew")
 
-        return chain.proceed(requestBuilder.build())
+        val request = requestBuilder.build()
+        var response = chain.proceed(request)
+
+        if (!response.isSuccessful) {
+
+            response = chain.proceed(request)
+            Log.d("intercept", "Request is proceeded")
+
+        }
+
+        return response
     }
 }

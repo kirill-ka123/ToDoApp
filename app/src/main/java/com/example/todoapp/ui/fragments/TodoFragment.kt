@@ -1,7 +1,6 @@
 package com.example.todoapp.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -11,12 +10,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
+import com.example.todoapp.common.Event
 import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
 import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_fragment.*
 import kotlinx.coroutines.cancelChildren
 
@@ -59,6 +60,22 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 casesAdapter?.differ?.submitList(todoItems)
             } else {
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoItems))
+            }
+        }
+
+        todoViewModel.getMessageLive().observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is Event.GetEvent -> {
+                    Snackbar.make(view, event.message, Snackbar.LENGTH_INDEFINITE).apply {
+                        setAction(R.string.repeat) {
+                            todoViewModel.getTodoItemsNetwork()
+                        }
+                        show()
+                    }
+                }
+                is Event.SetEvent -> {
+                    Snackbar.make(view, event.message, Snackbar.LENGTH_LONG).show()
+                }
             }
         }
     }

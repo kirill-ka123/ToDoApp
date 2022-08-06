@@ -12,7 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_item.view.*
 
 class ItemTouchHelperCallback(
-    private val todoViewModel: TodoViewModel?,
+    private val todoViewModel: TodoViewModel,
     private val casesAdapter: CasesAdapter,
     private val view: View
 ) : ItemTouchHelper.SimpleCallback(
@@ -35,17 +35,17 @@ class ItemTouchHelperCallback(
         when (rightOrLeft) {
             true -> {
                 val newTodoItem = todoItem.copy(done = !viewHolder.itemView.checkbox.isChecked)
-                todoViewModel?.putTodoItemNetwork(newTodoItem)
+                todoViewModel.putTodoItemNetwork(newTodoItem)
             }
             false -> {
-                todoViewModel?.deleteTodoItemNetwork(todoItem)
+                todoViewModel.deleteTodoItemNetwork(todoItem.id)
                 Snackbar.make(
                     view,
                     view.resources.getString(R.string.case_was_deleted),
                     Snackbar.LENGTH_LONG
                 ).apply {
                     setAction(view.resources.getString(R.string.cancel)) {
-                        todoViewModel?.postTodoItemNetwork(todoItem, todoItem.id)
+                        todoViewModel.postTodoItemNetwork(todoItem, todoItem.id)
                     }
                     show()
                 }

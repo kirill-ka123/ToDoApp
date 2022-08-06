@@ -11,7 +11,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
-import com.example.todoapp.common.CaseResource
 import com.example.todoapp.common.Utils
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
@@ -43,7 +42,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
         delete.setOnClickListener {
             if (todoItem != null) {
-                caseViewModel.deleteTodoItemNetwork(todoItem)
+                caseViewModel.deleteTodoItemNetwork(todoItem.id)
             }
             findNavController().popBackStack()
         }
