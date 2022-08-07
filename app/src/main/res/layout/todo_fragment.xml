@@ -16,8 +16,8 @@
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:collapsedTitleTextColor="@color/label_primary"
             app:collapsedTitleTextAppearance="@style/titleInToolbar"
+            app:collapsedTitleTextColor="@color/label_primary"
             app:expandedTitleMarginBottom="48dp"
             app:expandedTitleMarginStart="60dp"
             app:expandedTitleTextAppearance="@style/title"
@@ -65,7 +65,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -82,8 +82,40 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="90dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_anchor="@id/fab"
+        app:layout_anchorGravity="start|center">
+
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="2"
+            android:textAppearance="@style/title_item" />
+
+        <Button
+            android:id="@+id/btn_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/blue"
+            android:text="@string/repeat"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

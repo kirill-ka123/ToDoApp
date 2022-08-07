@@ -5,4 +5,5 @@ object Constants {
     const val TOKEN = "LethonelRavavaris"
     const val REVISION = "revision"
     const val NETWORK_RETRY_DELAY = 1000L
+    var isNetworkConnected = false
 }

@@ -16,9 +16,7 @@
     <string name="important">Important</string>
     <string name="importance">Importance</string>
     <string name="no_internet_connection">No internet connection</string>
-    <string name="network_failure">Network failure</string>
-    <string name="conversion_error">Conversion error</string>
-    <string name="internal_error">Internal error</string>
+    <string name="something_went_wrong">Something went wrong</string>
     <string name="repeat">Repeat</string>
     <string-array name="importance">
         <item>No</item>

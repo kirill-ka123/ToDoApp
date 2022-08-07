@@ -6,8 +6,9 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.todoapp.R
 import com.example.todoapp.common.Constants.NETWORK_RETRY_DELAY
-import com.example.todoapp.common.EventMessage
+import com.example.todoapp.common.StateRequest
 import com.example.todoapp.data.SessionManager
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.network.RetrofitInstance
@@ -18,8 +19,10 @@ import com.example.todoapp.network.models.TodoItemNetwork
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import java.io.IOException
+import java.net.UnknownHostException
 
-class TodoItemsRepository() {
+class TodoItemsRepository {
     companion object {
         @Volatile
         private var instance: TodoItemsRepository? = null
@@ -30,8 +33,13 @@ class TodoItemsRepository() {
         }
     }
 
-    private val _message = MutableLiveData<EventMessage>()
-    val message: LiveData<EventMessage> = _message
+    // Для ошибок в get запросе
+    private val _stateGetRequest = MutableLiveData<StateRequest>()
+    val stateGetRequest: LiveData<StateRequest> = _stateGetRequest
+
+    // Для ошибок в post, put, delete запросах
+    private val _stateSetRequest = MutableLiveData<StateRequest>()
+    val stateSetRequest: LiveData<StateRequest> = _stateSetRequest
 
     private val _todoItemsLiveData: MutableLiveData<List<TodoItem>> = MutableLiveData()
     val todoItemsLiveData: LiveData<List<TodoItem>> = _todoItemsLiveData
@@ -50,14 +58,21 @@ class TodoItemsRepository() {
         SessionManager(context).saveRevision(revision)
     }
 
+    private fun mapErrors(e: Throwable) = when (e) {
+        is UnknownHostException -> R.string.something_went_wrong
+        is IOException -> R.string.no_internet_connection
+        else -> R.string.something_went_wrong
+    }
+
     suspend fun getTodoItemsNetwork(context: Context) {
         getTodoItemsFlow(context).retry(1) {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(EventMessage.GetEventMessage(it.message.toString()))
+            _stateGetRequest.postValue(StateRequest.Error(mapErrors(it)))
         }.collect {
             setTodoItemsLiveData(it)
+            _stateGetRequest.postValue(StateRequest.Success())
         }
     }
 
@@ -65,7 +80,7 @@ class TodoItemsRepository() {
         return flow {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).getTodoItems()
-            } else throw Exception("No Internet connection")
+            } else throw IOException("Нет интернет соединения")
 
             if (response.isSuccessful) {
                 val body = response.body()
@@ -74,15 +89,15 @@ class TodoItemsRepository() {
                     emit(body.todoItemsNetwork.map { it.mapToTodoItem() }.sortedBy { todoItem ->
                         todoItem.id.toInt()
                     })
-                } else throw Exception("Body is null")
-            } else throw Exception(response.message())
+                } else throw UnknownHostException("Тело запроса - null")
+            } else throw UnknownHostException(response.message())
         }.flowOn(Dispatchers.IO)
     }
 
     private fun generateId(): Int {
         todoItemsLiveData.value?.let { todoItems ->
             if (todoItems.isNotEmpty()) {
-                return todoItems.size
+                return todoItems.last().id.toInt() + 1
             } else return 0
         }
         return 0
@@ -93,9 +108,10 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
+            _stateSetRequest.postValue(StateRequest.Error(mapErrors(it)))
         }.collect {
             setTodoItemsLiveData(it)
+            _stateSetRequest.postValue(StateRequest.Success())
         }
     }
 
@@ -112,15 +128,15 @@ class TodoItemsRepository() {
         return flow {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).postTodoItem(setItemRequest)
-            } else throw Exception("No Internet connection")
+            } else throw IOException("Нет интернет соединения")
 
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     saveRevision(context, body)
                     emit(handlePostTodoItem(body))
-                } else throw Exception("Body is null")
-            } else throw Exception(response.message())
+                } else throw UnknownHostException("Тело запроса - null")
+            } else throw UnknownHostException(response.message())
         }.flowOn(Dispatchers.IO)
     }
 
@@ -150,9 +166,10 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
+            _stateSetRequest.postValue(StateRequest.Error(mapErrors(it)))
         }.collect {
             setTodoItemsLiveData(it)
+            _stateSetRequest.postValue(StateRequest.Success())
         }
     }
 
@@ -166,15 +183,15 @@ class TodoItemsRepository() {
         return flow {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).putTodoItem(todoItem.id, setItemRequest)
-            } else throw Exception("No Internet connection")
+            } else throw IOException("Нет интернет соединения")
 
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     saveRevision(context, body)
                     emit(handlePutTodoItem(body))
-                } else throw Exception("Body is null")
-            } else throw Exception(response.message())
+                } else throw UnknownHostException("Тело запроса - null")
+            } else throw UnknownHostException(response.message())
         }.flowOn(Dispatchers.IO)
     }
 
@@ -199,9 +216,10 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
+            _stateSetRequest.postValue(StateRequest.Error(mapErrors(it)))
         }.collect {
             setTodoItemsLiveData(it)
+            _stateSetRequest.postValue(StateRequest.Success())
         }
     }
 
@@ -209,15 +227,15 @@ class TodoItemsRepository() {
         return flow {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).deleteTodoItem(id)
-            } else throw Exception("No Internet connection")
+            } else throw IOException("Нет интернет соединения")
 
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     saveRevision(context, body)
                     emit(handleDeleteTodoItem(body))
-                } else throw Exception("Body is null")
-            } else throw Exception(response.message())
+                } else throw UnknownHostException("Тело запроса - null")
+            } else throw UnknownHostException(response.message())
         }.flowOn(Dispatchers.IO)
     }
 

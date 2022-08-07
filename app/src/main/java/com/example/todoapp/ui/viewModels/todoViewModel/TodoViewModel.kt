@@ -23,7 +23,9 @@ class TodoViewModel(
 
     fun getTodoItemsLive() = todoItemsRepository.todoItemsLiveData
 
-    fun getMessageLive() = todoItemsRepository.message
+    fun getStateGetRequestLive() = todoItemsRepository.stateGetRequest
+
+    fun getStateSetRequestLive() = todoItemsRepository.stateSetRequest
 
     fun getTodoItemsNetwork() = viewModelScope.launch(Dispatchers.IO) {
         todoItemsRepository.getTodoItemsNetwork(app.applicationContext)

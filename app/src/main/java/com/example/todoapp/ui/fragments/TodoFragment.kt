@@ -5,22 +5,26 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.todoapp.R
-import com.example.todoapp.common.EventMessage
+import com.example.todoapp.common.StateRequest
 import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.models.TodoItem
+import com.example.todoapp.network.NetworkWorker
 import com.example.todoapp.repository.TodoItemsRepository
 import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_fragment.*
-import kotlinx.coroutines.cancelChildren
+import java.util.concurrent.TimeUnit
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val todoViewModel: TodoViewModel by viewModels {
@@ -31,6 +35,8 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
+        setupWorker()
+        setupErrorObservers(view)
 
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment)
@@ -64,22 +70,6 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoItems))
             }
         }
-
-        todoViewModel.getMessageLive().observe(viewLifecycleOwner) { event ->
-            when (event) {
-                is EventMessage.GetEventMessage -> {
-                    Snackbar.make(view, event.message, Snackbar.LENGTH_INDEFINITE).apply {
-                        setAction(R.string.repeat) {
-                            todoViewModel.getTodoItemsNetwork()
-                        }
-                        show()
-                    }
-                }
-                is EventMessage.SetEventMessage -> {
-                    Snackbar.make(view, event.message, Snackbar.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 
     override fun onDestroyView() {
@@ -105,6 +95,48 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         rvCases.apply {
             adapter = casesAdapter
             layoutManager = LinearLayoutManager(activity)
+        }
+    }
+
+    private fun setupWorker() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val networkRequest = PeriodicWorkRequestBuilder<NetworkWorker>(8, TimeUnit.HOURS)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(requireContext().applicationContext).enqueue(networkRequest)
+    }
+
+    private fun setupErrorObservers(view: View) {
+        // Для get запроса
+        todoViewModel.getStateGetRequestLive().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is StateRequest.Error -> {
+                    tv_error.text = getString(state.message ?: R.string.something_went_wrong)
+                    btn_error.setOnClickListener {
+                        todoViewModel.getTodoItemsNetwork()
+                    }
+                    error.visibility = View.VISIBLE
+                }
+                is StateRequest.Success -> {
+                    error.visibility = View.GONE
+                }
+            }
+        }
+
+        // Для post, put, delete запросов
+        todoViewModel.getStateSetRequestLive().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is StateRequest.Error -> {
+                    state.message?.let {
+                        Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+                is StateRequest.Success -> { }
+            }
         }
     }
 
