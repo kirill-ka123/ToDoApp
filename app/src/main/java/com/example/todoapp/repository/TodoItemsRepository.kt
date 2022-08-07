@@ -6,7 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.todoapp.R
+import com.example.todoapp.common.Constants.NETWORK_RETRY_DELAY
 import com.example.todoapp.common.Event
 import com.example.todoapp.data.SessionManager
 import com.example.todoapp.data.SourceData
@@ -16,17 +16,18 @@ import com.example.todoapp.network.models.GetItemsResponse
 import com.example.todoapp.network.models.SetItemRequest
 import com.example.todoapp.network.models.SetItemResponse
 import com.example.todoapp.network.models.TodoItemNetwork
-import retrofit2.Response
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 
-class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
+class TodoItemsRepository() {
     companion object {
         @Volatile
         private var instance: TodoItemsRepository? = null
         private val lock = Any()
 
         fun getRepository() = instance ?: synchronized(lock) {
-            instance ?: TodoItemsRepository(SourceData.todoItems).also { instance = it }
+            instance ?: TodoItemsRepository().also { instance = it }
         }
     }
 
@@ -36,78 +37,47 @@ class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
     private val _todoItemsLiveData: MutableLiveData<List<TodoItem>> = MutableLiveData()
     val todoItemsLiveData: LiveData<List<TodoItem>> = _todoItemsLiveData
 
-//    private val todoItemsMutableState: MutableStateFlow<List<TodoItem>> = MutableStateFlow(listOf())
-//    val todoItemsState: StateFlow<List<TodoItem>>
-//        get() = todoItemsMutableState
-
-    fun setTodoItemsLiveData(todoItems: List<TodoItem>) {
+    private fun setTodoItemsLiveData(todoItems: List<TodoItem>) {
         _todoItemsLiveData.postValue(todoItems)
     }
 
-    fun refreshLiveData() {
-        todoItemsLiveData.value?.let { todoItems ->
-            setTodoItemsLiveData(todoItems.toList())
-        }
+    private fun saveRevision(context: Context, response: GetItemsResponse) {
+        val revision = response.revision
+        SessionManager(context).saveRevision(revision)
     }
 
-    private suspend fun safeCall(context: Context, event: Event, call: suspend () -> Unit) {
-        try {
-            if (hasInternetConnection(context)) {
-                call()
-            } else {
-                event.message = R.string.no_internet_connection
-                _message.postValue(event)
-            }
-        } catch (t: Throwable) {
-            when (t) {
-                is IOException -> {
-                    event.message = R.string.network_failure
-                    _message.postValue(event)
-                }
-                else -> {
-                    event.message = R.string.conversion_error
-                    _message.postValue(event)
-                }
-            }
-        }
+    private fun saveRevision(context: Context, response: SetItemResponse) {
+        val revision = response.revision
+        SessionManager(context).saveRevision(revision)
     }
 
     suspend fun getTodoItemsNetwork(context: Context) {
-        safeCall(context, Event.GetEvent(0)) {
-            val response = RetrofitInstance.getApi(context).getTodoItems()
-            handleGetItemsResponse(context, response)
+        getTodoItemsFlow(context).retry(1) {
+            delay(NETWORK_RETRY_DELAY)
+            return@retry true
+        }.catch {
+            _message.postValue(Event.GetEvent(it.message.toString()))
+        }.collect {
+            setTodoItemsLiveData(it)
         }
     }
 
-    private fun handleGetItemsResponse(context: Context, response: Response<GetItemsResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                val revision = resultResponse.revision
-                SessionManager(context).saveRevision(revision)
+    private suspend fun getTodoItemsFlow(context: Context): Flow<List<TodoItem>> {
+        return flow {
+            val response = if (hasInternetConnection(context)) {
+                RetrofitInstance.getApi(context).getTodoItems()
+            } else throw Exception("No Internet connection")
 
-                val todoItems = resultResponse.todoItemsNetwork.map {
-                    it.mapToTodoItem()
-                }.sortedBy { todoItem ->
-                    todoItem.id.toInt()
-                }
-                setTodoItemsLiveData(todoItems)
-            }
-        } else _message.postValue(Event.GetEvent(R.string.internal_error))
-    }
-
-    suspend fun getTodoItemByIdNetwork(context: Context, id: String) =
-        RetrofitInstance.getApi(context).getTodoItemById(id)
-
-    suspend fun postTodoItemNetwork(context: Context, todoItem: TodoItem, id: String?) {
-        safeCall(context, Event.SetEvent(0)) {
-            val todoItemNetwork: TodoItemNetwork = if (id != null) {
-                todoItem.mapToTodoItemNetwork(id)
-            } else todoItem.mapToTodoItemNetwork(generateId().toString())
-
-            val response = RetrofitInstance.getApi(context)
-                .postTodoItem(SetItemRequest(todoItemNetwork = todoItemNetwork))
-            handlePostItemResponse(context, response)
-        }
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    saveRevision(context, body)
+                    emit(body.todoItemsNetwork.map { it.mapToTodoItem() }.sortedBy { todoItem ->
+                        todoItem.id.toInt()
+                    })
+                } else throw Exception("Body is null")
+            } else throw Exception(response.message())
+        }.flowOn(Dispatchers.IO)
     }
 
     private fun generateId(): Int {
@@ -119,90 +89,153 @@ class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
         return 0
     }
 
-    private fun handlePostItemResponse(context: Context, response: Response<SetItemResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                val newItem = resultResponse.todoItemNetwork.mapToTodoItem()
-                todoItemsLiveData.value?.let { todoItems ->
-                    val revision = resultResponse.revision
-                    SessionManager(context).saveRevision(revision)
-
-                    val newList = todoItems.toMutableList()
-                    var flag = true
-                    todoItems.forEachIndexed { index, todoItem ->
-                        if (newItem.id.toInt() < todoItem.id.toInt()) {
-                            newList.add(index, newItem)
-                            setTodoItemsLiveData(newList.toList())
-                            flag = false
-                            return
-                        }
-                    }
-                    if (flag) {
-                        newList.add(newItem)
-                        setTodoItemsLiveData(newList.toList())
-                    }
-                }
-            }
-        } else _message.postValue(Event.SetEvent(R.string.internal_error))
-    }
-
-
-    suspend fun putTodoItemNetwork(context: Context, todoItem: TodoItem) {
-        safeCall(context, Event.SetEvent(0)) {
-            val todoItemNetwork = todoItem.mapToTodoItemNetwork(todoItem.id)
-            val response = RetrofitInstance.getApi(context)
-                .putTodoItem(todoItemNetwork.id, SetItemRequest(todoItemNetwork = todoItemNetwork))
-            handlePutItemResponse(context, response)
+    suspend fun postTodoItemNetwork(context: Context, todoItem: TodoItem, id: String?) {
+        postTodoItemFlow(context, todoItem, id).retry(1) {
+            delay(NETWORK_RETRY_DELAY)
+            return@retry true
+        }.catch {
+            _message.postValue(Event.SetEvent(it.message.toString()))
+        }.collect {
+            setTodoItemsLiveData(it)
         }
     }
 
-    private fun handlePutItemResponse(context: Context, response: Response<SetItemResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                val newItem = resultResponse.todoItemNetwork.mapToTodoItem()
-                todoItemsLiveData.value?.let { todoItems ->
-                    val revision = resultResponse.revision
-                    SessionManager(context).saveRevision(revision)
+    private suspend fun postTodoItemFlow(
+        context: Context,
+        todoItem: TodoItem,
+        id: String?
+    ): Flow<List<TodoItem>> {
+        val todoItemNetwork: TodoItemNetwork = if (id != null) {
+            todoItem.mapToTodoItemNetwork(id)
+        } else todoItem.mapToTodoItemNetwork(generateId().toString())
+        val setItemRequest = SetItemRequest(todoItemNetwork = todoItemNetwork)
 
-                    val newList = todoItems.toMutableList()
-                    todoItems.forEachIndexed { index, todoItem ->
-                        if (todoItem.id.toInt() == newItem.id.toInt()) {
-                            newList[index] = newItem
-                            return@forEachIndexed
-                        }
-                    }
-                    setTodoItemsLiveData(newList.toList())
+        return flow {
+            val response = if (hasInternetConnection(context)) {
+                RetrofitInstance.getApi(context).postTodoItem(setItemRequest)
+            } else throw Exception("No Internet connection")
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    saveRevision(context, body)
+                    emit(handlePostTodoItem(body))
+                } else throw Exception("Body is null")
+            } else throw Exception(response.message())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private fun handlePostTodoItem(body: SetItemResponse): List<TodoItem> {
+        val newItem = body.todoItemNetwork.mapToTodoItem()
+        val todoItems = todoItemsLiveData.value
+        if (todoItems != null) {
+            val newList = todoItems.toMutableList()
+            var flag = true
+            todoItems.forEachIndexed { index, todoItem ->
+                if (newItem.id.toInt() < todoItem.id.toInt()) {
+                    newList.add(index, newItem)
+                    flag = false
+                    return newList.toList()
                 }
             }
-        } else _message.postValue(Event.SetEvent(R.string.internal_error))
+            if (flag) {
+                newList.add(newItem)
+                return newList.toList()
+            }
+        }
+        return emptyList()
+    }
+
+    suspend fun putTodoItemNetwork(context: Context, todoItem: TodoItem) {
+        putTodoItemFlow(context, todoItem).retry(1) {
+            delay(NETWORK_RETRY_DELAY)
+            return@retry true
+        }.catch {
+            _message.postValue(Event.SetEvent(it.message.toString()))
+        }.collect {
+            setTodoItemsLiveData(it)
+        }
+    }
+
+    private suspend fun putTodoItemFlow(
+        context: Context,
+        todoItem: TodoItem
+    ): Flow<List<TodoItem>> {
+        val todoItemNetwork: TodoItemNetwork = todoItem.mapToTodoItemNetwork(todoItem.id)
+        val setItemRequest = SetItemRequest(todoItemNetwork = todoItemNetwork)
+
+        return flow {
+            val response = if (hasInternetConnection(context)) {
+                RetrofitInstance.getApi(context).putTodoItem(todoItem.id, setItemRequest)
+            } else throw Exception("No Internet connection")
+
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    saveRevision(context, body)
+                    emit(handlePutTodoItem(body))
+                } else throw Exception("Body is null")
+            } else throw Exception(response.message())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private fun handlePutTodoItem(body: SetItemResponse): List<TodoItem> {
+        val newItem = body.todoItemNetwork.mapToTodoItem()
+        val todoItems = todoItemsLiveData.value
+        if (todoItems != null) {
+            val newList = todoItems.toMutableList()
+            todoItems.forEachIndexed { index, todoItem ->
+                if (todoItem.id.toInt() == newItem.id.toInt()) {
+                    newList[index] = newItem
+                    return@forEachIndexed
+                }
+            }
+            return newList.toList()
+        }
+        return emptyList()
     }
 
     suspend fun deleteTodoItemNetwork(context: Context, id: String) {
-        safeCall(context, Event.SetEvent(0)) {
-            val response = RetrofitInstance.getApi(context).deleteTodoItem(id)
-            handleDeleteItemResponse(context, response)
+        deleteTodoItemFlow(context, id).retry(1) {
+            delay(NETWORK_RETRY_DELAY)
+            return@retry true
+        }.catch {
+            _message.postValue(Event.SetEvent(it.message.toString()))
+        }.collect {
+            setTodoItemsLiveData(it)
         }
     }
 
-    private fun handleDeleteItemResponse(context: Context, response: Response<SetItemResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                val newItem = resultResponse.todoItemNetwork.mapToTodoItem()
-                todoItemsLiveData.value?.let { todoItems ->
-                    val revision = resultResponse.revision
-                    SessionManager(context).saveRevision(revision)
+    private suspend fun deleteTodoItemFlow(context: Context, id: String): Flow<List<TodoItem>> {
+        return flow {
+            val response = if (hasInternetConnection(context)) {
+                RetrofitInstance.getApi(context).deleteTodoItem(id)
+            } else throw Exception("No Internet connection")
 
-                    val newList = todoItems.toMutableList()
-                    todoItems.forEachIndexed { index, todoItem ->
-                        if (todoItem.id.toInt() == newItem.id.toInt()) {
-                            newList.removeAt(index)
-                            return@forEachIndexed
-                        }
-                    }
-                    setTodoItemsLiveData(newList)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    saveRevision(context, body)
+                    emit(handleDeleteTodoItem(body))
+                } else throw Exception("Body is null")
+            } else throw Exception(response.message())
+        }.flowOn(Dispatchers.IO)
+    }
+
+    private fun handleDeleteTodoItem(body: SetItemResponse): List<TodoItem> {
+        val deletedItem = body.todoItemNetwork.mapToTodoItem()
+        val todoItems = todoItemsLiveData.value
+        if (todoItems != null) {
+            val newList = todoItems.toMutableList()
+            todoItems.forEachIndexed { index, todoItem ->
+                if (todoItem.id.toInt() == deletedItem.id.toInt()) {
+                    newList.removeAt(index)
+                    return@forEachIndexed
                 }
             }
-        } else _message.postValue(Event.SetEvent(R.string.internal_error))
+            return newList.toList()
+        }
+        return emptyList()
     }
 
     private fun hasInternetConnection(context: Context): Boolean {

@@ -1,8 +1,8 @@
 package com.example.todoapp.common
 
 sealed class Event(
-    var message: Int
+    val message: String
 ) {
-    class GetEvent(message: Int): Event(message)
-    class SetEvent(message: Int): Event(message)
+    class GetEvent(message: String): Event(message)
+    class SetEvent(message: String): Event(message)
 }

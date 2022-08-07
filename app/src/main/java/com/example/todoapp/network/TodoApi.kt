@@ -1,6 +1,9 @@
 package com.example.todoapp.network
 
-import com.example.todoapp.network.models.*
+import com.example.todoapp.network.models.GetItemByIdResponse
+import com.example.todoapp.network.models.GetItemsResponse
+import com.example.todoapp.network.models.SetItemRequest
+import com.example.todoapp.network.models.SetItemResponse
 import retrofit2.Response
 import retrofit2.http.*
 

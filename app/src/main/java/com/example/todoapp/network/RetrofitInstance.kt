@@ -8,33 +8,37 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object RetrofitInstance {
-    private lateinit var api: TodoApi
+class RetrofitInstance {
+    companion object {
+        @Volatile
+        private var instance: TodoApi? = null
+        private val lock = Any()
 
-    fun getApi(context: Context): TodoApi {
-        if (!::api.isInitialized) {
+        fun getApi(context: Context) = instance ?: synchronized(lock) {
+            instance ?: createApi(context).also { instance = it }
+        }
+
+        private fun createApi(context: Context): TodoApi {
             val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okhttpClient(context))
                 .build()
 
-            api = retrofit.create(TodoApi::class.java)
+            return retrofit.create(TodoApi::class.java)
         }
 
-        return api
-    }
-
-    private fun okhttpClient(context: Context): OkHttpClient {
-        val logging = HttpLoggingInterceptor().also {
-            it.setLevel(HttpLoggingInterceptor.Level.BODY)
+        private fun okhttpClient(context: Context): OkHttpClient {
+            val logging = HttpLoggingInterceptor().also {
+                it.setLevel(HttpLoggingInterceptor.Level.BODY)
+            }
+            return OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .addInterceptor(CustomInterceptor(context))
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(15, TimeUnit.SECONDS)
+                .build()
         }
-        return OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .addInterceptor(CustomInterceptor(context))
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .build()
     }
 }

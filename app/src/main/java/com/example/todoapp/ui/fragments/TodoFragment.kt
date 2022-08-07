@@ -45,11 +45,12 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             if (todoViewModel.visibleOrInvisible == "visible") {
                 ivVisibility.setImageResource(R.drawable.ic_visibility)
                 todoViewModel.visibleOrInvisible = "invisible"
+                casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoViewModel.getTodoItems()))
             } else {
                 ivVisibility.setImageResource(R.drawable.ic_visibility_off)
                 todoViewModel.visibleOrInvisible = "visible"
+                casesAdapter?.differ?.submitList(todoViewModel.getTodoItems())
             }
-            todoViewModel.refreshLiveData()
         }
 
         todoViewModel.getTodoItemsLive().observe(viewLifecycleOwner) { todoItems ->

@@ -1,8 +1,6 @@
 package com.example.todoapp.ui.viewModels.todoViewModel
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.models.TodoItem
@@ -20,21 +18,11 @@ class TodoViewModel(
 
     var visibleOrInvisible = "visible"
 
-    private suspend fun repeatRequest(call: suspend () -> Unit) {
-        val mainHandler = Handler(Looper.getMainLooper())
-        mainHandler.postDelayed({
-            viewModelScope.launch { call() }
-            mainHandler.removeCallbacksAndMessages(null)
-        }, 10)
-    }
+    fun getTodoItems() = todoItemsRepository.todoItemsLiveData.value ?: listOf()
 
     fun getTodoItemsLive() = todoItemsRepository.todoItemsLiveData
 
     fun getMessageLive() = todoItemsRepository.message
-
-    fun refreshLiveData() {
-        todoItemsRepository.refreshLiveData()
-    }
 
     fun getTodoItemsNetwork() = viewModelScope.launch(Dispatchers.IO) {
         todoItemsRepository.getTodoItemsNetwork(app.applicationContext)
