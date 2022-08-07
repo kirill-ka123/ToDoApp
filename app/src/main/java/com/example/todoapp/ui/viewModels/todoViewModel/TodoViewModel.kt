@@ -3,6 +3,7 @@ package com.example.todoapp.ui.viewModels.todoViewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +17,7 @@ class TodoViewModel(
         getTodoItemsNetwork()
     }
 
-    var visibleOrInvisible = "visible"
+    var stateVisibility = StateVisibility.VISIBLE
 
     fun getTodoItems() = todoItemsRepository.todoItemsLiveData.value ?: listOf()
 

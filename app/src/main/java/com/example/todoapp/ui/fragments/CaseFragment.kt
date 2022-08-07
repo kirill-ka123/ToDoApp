@@ -79,7 +79,6 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        caseViewModel.viewModelScope.coroutineContext.cancelChildren()
         deadline = 0L
     }
 

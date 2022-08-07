@@ -7,9 +7,8 @@ import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.todoapp.common.Constants.NETWORK_RETRY_DELAY
-import com.example.todoapp.common.Event
+import com.example.todoapp.common.EventMessage
 import com.example.todoapp.data.SessionManager
-import com.example.todoapp.data.SourceData
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.network.RetrofitInstance
 import com.example.todoapp.network.models.GetItemsResponse
@@ -31,8 +30,8 @@ class TodoItemsRepository() {
         }
     }
 
-    private val _message = MutableLiveData<Event>()
-    val message: LiveData<Event> = _message
+    private val _message = MutableLiveData<EventMessage>()
+    val message: LiveData<EventMessage> = _message
 
     private val _todoItemsLiveData: MutableLiveData<List<TodoItem>> = MutableLiveData()
     val todoItemsLiveData: LiveData<List<TodoItem>> = _todoItemsLiveData
@@ -56,7 +55,7 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(Event.GetEvent(it.message.toString()))
+            _message.postValue(EventMessage.GetEventMessage(it.message.toString()))
         }.collect {
             setTodoItemsLiveData(it)
         }
@@ -94,7 +93,7 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(Event.SetEvent(it.message.toString()))
+            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
         }.collect {
             setTodoItemsLiveData(it)
         }
@@ -151,7 +150,7 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(Event.SetEvent(it.message.toString()))
+            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
         }.collect {
             setTodoItemsLiveData(it)
         }
@@ -200,7 +199,7 @@ class TodoItemsRepository() {
             delay(NETWORK_RETRY_DELAY)
             return@retry true
         }.catch {
-            _message.postValue(Event.SetEvent(it.message.toString()))
+            _message.postValue(EventMessage.SetEventMessage(it.message.toString()))
         }.collect {
             setTodoItemsLiveData(it)
         }

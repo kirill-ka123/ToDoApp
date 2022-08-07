@@ -10,7 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
-import com.example.todoapp.common.Event
+import com.example.todoapp.common.EventMessage
+import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
@@ -35,20 +36,20 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment)
         }
 
-        if (todoViewModel.visibleOrInvisible == "visible") {
+        if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
             ivVisibility.setImageResource(R.drawable.ic_visibility_off)
         } else {
             ivVisibility.setImageResource(R.drawable.ic_visibility)
         }
 
         ivVisibility.setOnClickListener {
-            if (todoViewModel.visibleOrInvisible == "visible") {
+            if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
                 ivVisibility.setImageResource(R.drawable.ic_visibility)
-                todoViewModel.visibleOrInvisible = "invisible"
+                todoViewModel.stateVisibility = StateVisibility.INVISIBLE
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoViewModel.getTodoItems()))
             } else {
                 ivVisibility.setImageResource(R.drawable.ic_visibility_off)
-                todoViewModel.visibleOrInvisible = "visible"
+                todoViewModel.stateVisibility = StateVisibility.VISIBLE
                 casesAdapter?.differ?.submitList(todoViewModel.getTodoItems())
             }
         }
@@ -57,7 +58,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             completeTitle.text =
                 getString(R.string.number_of_completed, getNumberOfCompleted(todoItems))
 
-            if (todoViewModel.visibleOrInvisible == "visible") {
+            if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
                 casesAdapter?.differ?.submitList(todoItems)
             } else {
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoItems))
@@ -66,7 +67,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
         todoViewModel.getMessageLive().observe(viewLifecycleOwner) { event ->
             when (event) {
-                is Event.GetEvent -> {
+                is EventMessage.GetEventMessage -> {
                     Snackbar.make(view, event.message, Snackbar.LENGTH_INDEFINITE).apply {
                         setAction(R.string.repeat) {
                             todoViewModel.getTodoItemsNetwork()
@@ -74,7 +75,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                         show()
                     }
                 }
-                is Event.SetEvent -> {
+                is EventMessage.SetEventMessage -> {
                     Snackbar.make(view, event.message, Snackbar.LENGTH_LONG).show()
                 }
             }
@@ -83,7 +84,6 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        todoViewModel.viewModelScope.coroutineContext.cancelChildren()
         casesAdapter = null
     }
 
