@@ -1,11 +1,11 @@
 package com.example.todoapp.repository
 
-import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.todoapp.data.SourceData
 import com.example.todoapp.models.TodoItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
@@ -26,11 +26,11 @@ class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
 
     suspend fun upsertTodoItem(newTodoItem: TodoItem) {
         withContext(Dispatchers.IO) {
-            SystemClock.sleep(1000)
+            delay(1000)
 
-            if (newTodoItem.id == "") {
-                newTodoItem.id = generateId()
-                sourceData.add(newTodoItem)
+            if (newTodoItem.id.isEmpty()) {
+                val newTodoItemWithId = newTodoItem.copy(id = generateId())
+                sourceData.add(newTodoItemWithId)
             } else {
                 var index = 0
                 while (index < sourceData.size && newTodoItem.id.toInt() >= sourceData[index].id.toInt()) {
@@ -49,7 +49,7 @@ class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
 
     suspend fun deleteTodoItem(item: TodoItem) {
         withContext(Dispatchers.IO) {
-            SystemClock.sleep(1000)
+            delay(1000)
 
             var deleteIndex = 0
             sourceData.forEachIndexed { index, todoItem ->
@@ -65,7 +65,7 @@ class TodoItemsRepository(private val sourceData: MutableList<TodoItem>) {
 
     suspend fun getTodoItems() {
         withContext(Dispatchers.IO) {
-            SystemClock.sleep(1000)
+            delay(1000)
 
             _todoItemsLiveData.postValue(sourceData.toList())
         }

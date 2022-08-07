@@ -5,11 +5,11 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
+import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.repository.TodoItemsRepository
@@ -17,7 +17,6 @@ import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModelFactory
 import kotlinx.android.synthetic.main.todo_fragment.*
-import kotlinx.coroutines.cancelChildren
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val todoViewModel: TodoViewModel by viewModels {
@@ -33,19 +32,19 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment)
         }
 
-        if (todoViewModel.visibleOrInvisible == "visible") {
+        if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
             ivVisibility.setImageResource(R.drawable.ic_visibility_off)
         } else {
             ivVisibility.setImageResource(R.drawable.ic_visibility)
         }
 
         ivVisibility.setOnClickListener {
-            if (todoViewModel.visibleOrInvisible == "visible") {
+            if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
                 ivVisibility.setImageResource(R.drawable.ic_visibility)
-                todoViewModel.visibleOrInvisible = "invisible"
+                todoViewModel.stateVisibility = StateVisibility.INVISIBLE
             } else {
                 ivVisibility.setImageResource(R.drawable.ic_visibility_off)
-                todoViewModel.visibleOrInvisible = "visible"
+                todoViewModel.stateVisibility = StateVisibility.VISIBLE
             }
             todoViewModel.getTodoItems()
         }
@@ -54,7 +53,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             completeTitle.text =
                 getString(R.string.number_of_completed, getNumberOfCompleted(todoItems))
 
-            if (todoViewModel.visibleOrInvisible == "visible") {
+            if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
                 casesAdapter?.differ?.submitList(todoItems)
             } else {
                 casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoItems))
@@ -64,7 +63,6 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        todoViewModel.viewModelScope.coroutineContext.cancelChildren()
         casesAdapter = null
     }
 

@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
@@ -21,7 +20,6 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.case_fragment.*
-import kotlinx.coroutines.cancelChildren
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
     private val caseViewModel: CaseViewModel by viewModels {
@@ -38,7 +36,6 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
         ivClose.setOnClickListener {
             findNavController().popBackStack()
-            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         delete.setOnClickListener {
@@ -46,7 +43,6 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                 caseViewModel.deleteTodoItem(todoItem)
             }
             findNavController().popBackStack()
-            //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
         }
 
         switchDeadline.setOnCheckedChangeListener { _, isChecked ->
@@ -66,7 +62,6 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                     val newTodoItem = createNewTodoItem(importance)
                     caseViewModel.saveTodoItem(newTodoItem)
                     findNavController().popBackStack()
-                    //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
                 } else Toast.makeText(
                     requireContext(),
                     getString(R.string.toast_empty_text),
@@ -76,14 +71,12 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                 val changedTodoItem = changeTodoItem(todoItem, importance)
                 caseViewModel.saveTodoItem(changedTodoItem)
                 findNavController().popBackStack()
-                //findNavController().navigate(R.id.action_caseFragment_to_todoFragment)
             }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        caseViewModel.viewModelScope.coroutineContext.cancelChildren()
         deadline = 0L
     }
 
