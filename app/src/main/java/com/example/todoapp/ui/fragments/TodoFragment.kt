@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
+import com.example.todoapp.common.StateRequest
 import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.decor.ItemTouchHelperCallback
 import com.example.todoapp.models.TodoItem
@@ -16,17 +17,19 @@ import com.example.todoapp.repository.TodoItemsRepository
 import com.example.todoapp.ui.adapters.CasesAdapter
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModel
 import com.example.todoapp.ui.viewModels.todoViewModel.TodoViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_fragment.*
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val todoViewModel: TodoViewModel by viewModels {
-        TodoViewModelFactory(TodoItemsRepository.getRepository())
+        TodoViewModelFactory(requireActivity().application, TodoItemsRepository)
     }
     private var casesAdapter: CasesAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView(view)
+        setupErrorObservers(view)
 
         fab.setOnClickListener {
             findNavController().navigate(R.id.action_todoFragment_to_caseFragment)
@@ -42,11 +45,12 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             if (todoViewModel.stateVisibility == StateVisibility.VISIBLE) {
                 ivVisibility.setImageResource(R.drawable.ic_visibility)
                 todoViewModel.stateVisibility = StateVisibility.INVISIBLE
+                casesAdapter?.differ?.submitList(getNotCompletedTodoItems(todoViewModel.getTodoItems()))
             } else {
                 ivVisibility.setImageResource(R.drawable.ic_visibility_off)
                 todoViewModel.stateVisibility = StateVisibility.VISIBLE
+                casesAdapter?.differ?.submitList(todoViewModel.getTodoItems())
             }
-            todoViewModel.getTodoItems()
         }
 
         todoViewModel.getTodoItemsLive().observe(viewLifecycleOwner) { todoItems ->
@@ -75,7 +79,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
             }
             casesAdapter.setOnCheckboxClickListener { todoItem, isChecked ->
                 val newTodoItem = todoItem.copy(done = isChecked)
-                todoViewModel.saveTodoItem(newTodoItem)
+                todoViewModel.putTodoItemNetwork(newTodoItem)
             }
             val itemTouchHelperCallback =
                 ItemTouchHelperCallback(todoViewModel, casesAdapter, view)
@@ -84,6 +88,36 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         rvCases.apply {
             adapter = casesAdapter
             layoutManager = LinearLayoutManager(activity)
+        }
+    }
+
+    private fun setupErrorObservers(view: View) {
+        // Для get запроса
+        todoViewModel.getStateGetRequestLive().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is StateRequest.Error -> {
+                    tv_error.text = getString(state.message ?: R.string.something_went_wrong)
+                    btn_error.setOnClickListener {
+                        todoViewModel.getTodoItemsNetwork()
+                    }
+                    error.visibility = View.VISIBLE
+                }
+                is StateRequest.Success -> {
+                    error.visibility = View.GONE
+                }
+            }
+        }
+
+        // Для post, put, delete запросов
+        todoViewModel.getStateSetRequestLive().observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is StateRequest.Error -> {
+                    state.message?.let {
+                        Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+                    }
+                }
+                is StateRequest.Success -> {}
+            }
         }
     }
 

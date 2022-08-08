@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.case_fragment.*
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
     private val caseViewModel: CaseViewModel by viewModels {
-        CaseViewModelFactory(TodoItemsRepository.getRepository())
+        CaseViewModelFactory(requireActivity().application, TodoItemsRepository)
     }
     private val args: CaseFragmentArgs by navArgs()
     private var deadline: Long = 0L
@@ -40,7 +40,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
         delete.setOnClickListener {
             if (todoItem != null) {
-                caseViewModel.deleteTodoItem(todoItem)
+                caseViewModel.deleteTodoItemNetwork(todoItem.id)
             }
             findNavController().popBackStack()
         }
@@ -60,7 +60,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
             if (todoItem == null) {
                 if (etCase.text.toString() != "") {
                     val newTodoItem = createNewTodoItem(importance)
-                    caseViewModel.saveTodoItem(newTodoItem)
+                    caseViewModel.postTodoItemNetwork(newTodoItem)
                     findNavController().popBackStack()
                 } else Toast.makeText(
                     requireContext(),
@@ -69,7 +69,7 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
                 ).show()
             } else {
                 val changedTodoItem = changeTodoItem(todoItem, importance)
-                caseViewModel.saveTodoItem(changedTodoItem)
+                caseViewModel.putTodoItemNetwork(changedTodoItem)
                 findNavController().popBackStack()
             }
         }
