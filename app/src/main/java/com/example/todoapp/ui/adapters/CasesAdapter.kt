@@ -14,7 +14,6 @@ import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 import kotlinx.android.synthetic.main.todo_item.view.*
 
-
 class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
     class CasesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(
@@ -32,33 +31,32 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
 
                     when (todoItem.importance) {
                         Importance.IMPORTANT -> {
+                            setTodoItemRedCheckbox()
                             setTodoItemHighImportance()
                         }
                         Importance.LOW -> {
                             setTodoItemLowImportance()
+                            setTodoItemGreyCheckbox()
                         }
                         Importance.BASIC -> {
                             setTodoItemBasicImportance()
+                            setTodoItemGreyCheckbox()
                         }
                     }
                 }
                 if (todoItem.deadline > 0L) {
-                    setTodoItemDeadline(Utils.convertUnixToDate(todoItem.deadline))
-                }
-                if (checkbox.isChecked) {
-                    setTodoItemGreenCheckbox()
+                    tvDate.visibility = View.VISIBLE
+                    tvDate.text = Utils.convertUnixToDate(todoItem.deadline)
                 } else {
-                    if (todoItem.importance == Importance.IMPORTANT) {
-                        setTodoItemRedCheckbox()
-                    } else {
-                        setTodoItemGreyCheckbox()
-                    }
+                    tvDate.visibility = View.GONE
+                    tvDate.text = ""
                 }
                 setOnClickListeners(todoItem, onItemClickListener, onCheckboxClickListener)
             }
         }
 
         private fun setTodoItemDone() {
+            setTodoItemGreenCheckbox()
             itemView.apply {
                 tv_title_item.setTextColor(
                     ContextCompat.getColor(
@@ -113,15 +111,9 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
             }
         }
 
-        private fun setTodoItemDeadline(deadline: String) {
-            itemView.apply {
-                tvDate.visibility = View.VISIBLE
-                tvDate.text = deadline
-            }
-        }
-
         private fun setTodoItemGreenCheckbox() {
             itemView.apply {
+                checkbox.isChecked = true
                 checkbox.buttonTintList =
                     ContextCompat.getColorStateList(context, R.color.green)
             }
@@ -129,6 +121,7 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
 
         private fun setTodoItemRedCheckbox() {
             itemView.apply {
+                checkbox.isChecked = false
                 checkbox.buttonTintList =
                     ContextCompat.getColorStateList(context, R.color.red)
             }
@@ -136,6 +129,7 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
 
         private fun setTodoItemGreyCheckbox() {
             itemView.apply {
+                checkbox.isChecked = false
                 checkbox.buttonTintList =
                     ContextCompat.getColorStateList(context, R.color.label_tertiary)
             }
@@ -173,7 +167,7 @@ class CasesAdapter : RecyclerView.Adapter<CasesAdapter.CasesViewHolder>() {
         }
 
         override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
-            return oldItem == newItem
+            return oldItem == newItem && oldItem.done == newItem.done
         }
     }
 

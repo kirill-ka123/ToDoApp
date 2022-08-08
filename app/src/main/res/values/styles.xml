@@ -134,6 +134,15 @@
         </item>
     </style>
 
+    <style name="error">
+        <item name="android:textSize">
+            18sp
+        </item>
+        <item name="android:textColor">
+            @color/blue
+        </item>
+    </style>
+
     <style name="colored_switch" parent="Theme.AppCompat.Light">
         <item name="colorSwitchThumbNormal">@color/back_elevated</item>
         <item name="colorControlActivated">@color/blue</item>
