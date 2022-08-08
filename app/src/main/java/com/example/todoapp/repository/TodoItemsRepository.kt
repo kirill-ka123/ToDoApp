@@ -170,7 +170,6 @@ object TodoItemsRepository {
     ): Flow<List<TodoItem>> {
         val todoItemNetwork: TodoItemNetwork = todoItem.mapToTodoItemNetwork(todoItem.id)
         val setItemRequest = SetItemRequest(todoItemNetwork = todoItemNetwork)
-
         return flow {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).putTodoItem(todoItem.id, setItemRequest)
@@ -219,7 +218,6 @@ object TodoItemsRepository {
             val response = if (hasInternetConnection(context)) {
                 RetrofitInstance.getApi(context).deleteTodoItem(id)
             } else throw IOException("Нет интернет соединения")
-
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
