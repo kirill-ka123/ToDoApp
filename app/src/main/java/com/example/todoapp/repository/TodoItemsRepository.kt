@@ -16,23 +16,14 @@ import com.example.todoapp.network.models.GetItemsResponse
 import com.example.todoapp.network.models.SetItemRequest
 import com.example.todoapp.network.models.SetItemResponse
 import com.example.todoapp.network.models.TodoItemNetwork
+import com.example.todoapp.network.models.TodoItemNetwork.Companion.mapToTodoItemNetwork
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import java.io.IOException
 import java.net.UnknownHostException
 
-class TodoItemsRepository {
-    companion object {
-        @Volatile
-        private var instance: TodoItemsRepository? = null
-        private val lock = Any()
-
-        fun getRepository() = instance ?: synchronized(lock) {
-            instance ?: TodoItemsRepository().also { instance = it }
-        }
-    }
-
+object TodoItemsRepository {
     // Для ошибок в get запросе
     private val _stateGetRequest = MutableLiveData<StateRequest>()
     val stateGetRequest: LiveData<StateRequest> = _stateGetRequest

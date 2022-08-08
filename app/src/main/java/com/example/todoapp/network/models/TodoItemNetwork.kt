@@ -27,4 +27,18 @@ data class TodoItemNetwork(
     fun mapToTodoItem() = TodoItem(
         id, text, Importance.valueOf(importance.uppercase()), deadline, done, createdAt, changedAt
     )
+
+    companion object {
+        fun TodoItem.mapToTodoItemNetwork(id: String) = TodoItemNetwork(
+            id,
+            text,
+            importance.name.lowercase(),
+            deadline,
+            done,
+            "#FFFFFF",
+            createdAt,
+            changedAt,
+            "model"
+        )
+    }
 }

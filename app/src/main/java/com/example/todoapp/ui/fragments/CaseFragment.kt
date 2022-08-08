@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.case_fragment.*
 
 class CaseFragment : Fragment(R.layout.case_fragment) {
     private val caseViewModel: CaseViewModel by viewModels {
-        CaseViewModelFactory(requireActivity().application, TodoItemsRepository.getRepository())
+        CaseViewModelFactory(requireActivity().application, TodoItemsRepository)
     }
     private val args: CaseFragmentArgs by navArgs()
     private var deadline: Long = 0L
