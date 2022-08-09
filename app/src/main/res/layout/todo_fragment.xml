@@ -48,7 +48,7 @@
                 app:layout_collapseMode="pin"
                 app:tint="@color/blue" />
 
-            <com.example.todoapp.common.NonClickableToolbar
+            <com.example.todoapp.presentation.common.NonClickableToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
