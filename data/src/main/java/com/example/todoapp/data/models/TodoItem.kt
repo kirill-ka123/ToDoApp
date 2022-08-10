@@ -1,7 +1,9 @@
 package com.example.todoapp.data.models
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class TodoItem(
     val id: String,
     val text: String,
@@ -10,4 +12,4 @@ data class TodoItem(
     val done: Boolean,
     val createdAt: Long,
     val changedAt: Long = 0L
-) : Serializable
+) : Parcelable
