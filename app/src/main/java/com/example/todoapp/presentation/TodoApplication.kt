@@ -7,10 +7,15 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.todoapp.data.network.NetworkWorker
+import com.example.todoapp.presentation.di.AppComponent
+import com.example.todoapp.presentation.di.AppModule
+import com.example.todoapp.presentation.di.DaggerAppComponent
 import com.example.todoapp.presentation.ioc.ApplicationComponent
 import java.util.concurrent.TimeUnit
 
-class TodoApplication: Application() {
+class TodoApplication : Application() {
+
+    lateinit var appComponent: AppComponent
 
     val applicationComponent by lazy { ApplicationComponent(this) }
 
@@ -20,6 +25,7 @@ class TodoApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        appComponent = DaggerAppComponent.builder().appModule(AppModule(this)).build()
         setupWorker()
     }
 
