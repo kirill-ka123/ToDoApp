@@ -1,7 +1,7 @@
 package com.example.todoapp.presentation.view
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.models.TodoItem
 
 class TodoItemDiffCalculator : DiffUtil.ItemCallback<TodoItem>() {
     override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {

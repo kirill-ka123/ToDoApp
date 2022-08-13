@@ -19,7 +19,7 @@
         <argument
             android:name="case"
             android:defaultValue="@null"
-            app:argType="com.example.todoapp.data.models.TodoItem"
+            app:argType="com.example.todoapp.presentation.models.TodoItem"
             app:nullable="true" />
     </fragment>
 </navigation>

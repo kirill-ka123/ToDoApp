@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.models.TodoItem
 
 class TodoAdapter(todoItemDiffCalculator: TodoItemDiffCalculator) : RecyclerView.Adapter<TodoViewHolder>() {
     val differ = AsyncListDiffer(this, todoItemDiffCalculator)

@@ -5,8 +5,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.data.models.Importance
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.models.Importance
+import com.example.todoapp.presentation.models.TodoItem
 import com.example.todoapp.presentation.common.Utils
 import kotlinx.android.synthetic.main.todo_item.view.*
 

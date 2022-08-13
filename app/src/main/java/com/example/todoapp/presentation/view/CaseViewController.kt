@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
-import com.example.todoapp.data.models.Importance
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.models.Importance
+import com.example.todoapp.presentation.models.TodoItem
 import com.example.todoapp.presentation.common.Utils
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -24,8 +24,8 @@ class CaseViewController(
     private val todoItem = args.case
 
     fun setupViews() {
-        setupTodoItemInfo()
         setupSpinner()
+        setupTodoItemInfo()
         setupSwitchClickListener()
         setupCloseClickListener()
         setupDeleteClickListener()

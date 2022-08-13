@@ -8,8 +8,8 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
-import com.example.todoapp.data.models.TodoItem
-import com.example.todoapp.data.network.models.StateRequest
+import com.example.todoapp.presentation.models.TodoItem
+import com.example.todoapp.presentation.data.network.models.StateRequest
 import com.example.todoapp.presentation.common.StateVisibility
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.todo_fragment.view.*
