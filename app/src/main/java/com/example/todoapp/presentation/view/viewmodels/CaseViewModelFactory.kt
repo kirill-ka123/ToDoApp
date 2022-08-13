@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.view
+package com.example.todoapp.presentation.view.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -8,11 +8,11 @@ import com.example.todoapp.presentation.di.scopes.AppScope
 import javax.inject.Inject
 
 @AppScope
-class TodoViewModelFactory @Inject constructor(
+class CaseViewModelFactory @Inject constructor(
     private val app: Application,
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TodoViewModel(app, todoItemsRepository) as T
+        return CaseViewModel(app, todoItemsRepository) as T
     }
 }

@@ -1,4 +1,4 @@
-package com.example.todoapp.presentation.view
+package com.example.todoapp.presentation.view.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
