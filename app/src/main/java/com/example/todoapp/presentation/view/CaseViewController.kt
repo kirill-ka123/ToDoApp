@@ -6,26 +6,39 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
-import com.example.todoapp.data.models.Importance
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.models.Importance
+import com.example.todoapp.presentation.models.TodoItem
 import com.example.todoapp.presentation.common.Utils
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.android.synthetic.main.case_fragment.view.*
 
-class CaseViewController(
-    private val fragment: CaseFragment,
-    private val rootView: View,
-    private val viewModel: CaseViewModel,
-    args: CaseFragmentArgs
+class CaseViewController @AssistedInject constructor(
+    @Assisted("caseFragment") private val fragment: CaseFragment,
+    @Assisted("caseFragmentView") private val rootView: View,
+    @Assisted("caseViewModel") private val viewModel: CaseViewModel,
+    @Assisted("caseArgs") args: CaseFragmentArgs
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("caseFragment") fragment: CaseFragment,
+            @Assisted("caseFragmentView") rootView: View,
+            @Assisted("caseViewModel") viewModel: CaseViewModel,
+            @Assisted("caseArgs") args: CaseFragmentArgs
+        ): CaseViewController
+    }
+
     private var deadline: Long = 0L
     private val todoItem = args.case
 
     fun setupViews() {
-        setupTodoItemInfo()
         setupSpinner()
+        setupTodoItemInfo()
         setupSwitchClickListener()
         setupCloseClickListener()
         setupDeleteClickListener()

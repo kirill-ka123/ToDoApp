@@ -5,9 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.data.models.TodoItem
+import com.example.todoapp.presentation.di.scopes.TodoFragmentScope
+import com.example.todoapp.presentation.models.TodoItem
+import javax.inject.Inject
 
-class TodoAdapter(todoItemDiffCalculator: TodoItemDiffCalculator) : RecyclerView.Adapter<TodoViewHolder>() {
+@TodoFragmentScope
+class TodoAdapter @Inject constructor(todoItemDiffCalculator: TodoItemDiffCalculator) : RecyclerView.Adapter<TodoViewHolder>() {
     val differ = AsyncListDiffer(this, todoItemDiffCalculator)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {

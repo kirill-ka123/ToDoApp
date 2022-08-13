@@ -8,21 +8,34 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
-import com.example.todoapp.data.models.TodoItem
-import com.example.todoapp.data.network.models.StateRequest
 import com.example.todoapp.presentation.common.StateVisibility
+import com.example.todoapp.presentation.data.network.models.StateRequest
+import com.example.todoapp.presentation.models.TodoItem
 import com.google.android.material.snackbar.Snackbar
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.android.synthetic.main.todo_fragment.view.*
 import java.io.IOException
 import java.net.UnknownHostException
 
-class TodoViewController(
-    private val fragment: TodoFragment,
-    private val rootView: View,
-    private val lifecycleOwner: LifecycleOwner,
-    private val viewModel: TodoViewModel,
+class TodoViewController @AssistedInject constructor(
+    @Assisted("todoFragment") private val fragment: TodoFragment,
+    @Assisted("todoFragmentView") private val rootView: View,
+    @Assisted("todoLifecycleOwner") private val lifecycleOwner: LifecycleOwner,
+    @Assisted("todoViewModel") private val viewModel: TodoViewModel,
     private val adapter: TodoAdapter
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("todoFragment") fragment: TodoFragment,
+            @Assisted("todoFragmentView") rootView: View,
+            @Assisted("todoLifecycleOwner") lifecycleOwner: LifecycleOwner,
+            @Assisted("todoViewModel") viewModel: TodoViewModel,
+        ): TodoViewController
+    }
+
     fun setupViews() {
         setupRecyclerView()
         setupVisibility()
@@ -141,7 +154,7 @@ class TodoViewController(
         }
     }
 
-    fun mapError(resources: Resources, t: Throwable?): String {
+    private fun mapError(resources: Resources, t: Throwable?): String {
         return when (t) {
             is UnknownHostException -> resources.getString(R.string.something_went_wrong)
             is IOException -> resources.getString(R.string.no_internet_connection)
@@ -149,7 +162,7 @@ class TodoViewController(
         }
     }
 
-    fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
+    private fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
         var numberOfCompleted = 0
         todoItems.forEach { todoItem ->
             if (todoItem.done) {

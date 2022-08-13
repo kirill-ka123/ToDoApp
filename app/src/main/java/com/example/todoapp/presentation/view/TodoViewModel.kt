@@ -3,8 +3,8 @@ package com.example.todoapp.presentation.view
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.models.TodoItem
-import com.example.todoapp.data.repository.TodoItemsRepository
+import com.example.todoapp.presentation.models.TodoItem
+import com.example.todoapp.presentation.data.repository.TodoItemsRepository
 import com.example.todoapp.presentation.common.StateVisibility
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

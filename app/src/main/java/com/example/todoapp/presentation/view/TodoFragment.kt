@@ -6,52 +6,40 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoapp.R
 import com.example.todoapp.presentation.TodoApplication
-import com.example.todoapp.presentation.ioc.TodoFragmentComponent
-import com.example.todoapp.presentation.ioc.TodoFragmentViewComponent
-import com.example.todoapp.presentation.ioc.TodoViewModelFactory
+import com.example.todoapp.presentation.di.TodoFragmentComponent
 import javax.inject.Inject
 
 class TodoFragment : Fragment(R.layout.todo_fragment) {
-    private val applicationComponent
-        get() = TodoApplication.get(requireContext()).applicationComponent
-    private lateinit var fragmentComponent: TodoFragmentComponent
-    private var fragmentViewComponent: TodoFragmentViewComponent? = null
+    private lateinit var todoFragmentComponent: TodoFragmentComponent
 
     @Inject
-    lateinit var vmFactory: TodoViewModelFactory
+    lateinit var todoViewControllerFactory: TodoViewController.Factory
+    private var todoViewController: TodoViewController? = null
 
+    @Inject
+    lateinit var todoViewModelFactory: TodoViewModelFactory
     private val todoViewModel: TodoViewModel by viewModels {
-        vmFactory
+        todoViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        (requireContext().applicationContext as TodoApplication).appComponent.inject(this)
-
-        fragmentComponent = TodoFragmentComponent(
-            applicationComponent,
-            fragment = this,
-            viewModel = todoViewModel,
-        )
+        todoFragmentComponent =
+            (requireContext().applicationContext as TodoApplication).appComponent.todoFragmentComponent()
+                .create()
+        todoFragmentComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragmentViewComponent = TodoFragmentViewComponent(
-            fragmentComponent,
-            root = view,
-            lifecycleOwner = viewLifecycleOwner,
-        ).apply {
-            todoViewController.apply {
-                setupViews()
-                setupObservers()
-            }
-        }
+        todoViewController = todoViewControllerFactory.create(this, view, viewLifecycleOwner, todoViewModel)
+        todoViewController?.setupViews()
+        todoViewController?.setupObservers()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        fragmentViewComponent = null
+        todoViewController = null
     }
 }

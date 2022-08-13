@@ -1,21 +1,19 @@
 package com.example.todoapp.presentation.di
 
 import android.app.Application
-import com.example.todoapp.data.repository.TodoItemsRepository
-import com.example.todoapp.presentation.ioc.TodoViewModelFactory
+import android.content.Context
+import com.example.todoapp.presentation.di.scopes.AppScope
 import dagger.Module
 import dagger.Provides
 
-@Module
-class AppModule(val app: Application) {
-
+@Module(
+    includes = [NetworkModule::class],
+    subcomponents = [TodoFragmentComponent::class, CaseFragmentComponent::class]
+)
+class AppModule {
     @Provides
-    fun provideApplication(): Application {
-        return app
-    }
-
-    @Provides
-    fun provideTodoViewModelFactory(app: Application, todoItemsRepository: TodoItemsRepository): TodoViewModelFactory {
-        return TodoViewModelFactory(app, todoItemsRepository)
+    @AppScope
+    fun provideContext(app: Application): Context {
+        return app.applicationContext
     }
 }

@@ -1,11 +1,22 @@
 package com.example.todoapp.presentation.di
 
-import com.example.todoapp.presentation.view.CaseFragment
-import com.example.todoapp.presentation.view.TodoFragment
+import android.app.Application
+import com.example.todoapp.presentation.TodoApplication
+import com.example.todoapp.presentation.di.scopes.AppScope
+import dagger.BindsInstance
 import dagger.Component
 
-@Component(modules = [AppModule::class, RepositoryModule::class])
+@Component(modules = [AppModule::class])
+@AppScope
 interface AppComponent {
-    fun inject(todoFragment: TodoFragment)
-    fun inject(caseFragment: CaseFragment)
+    @Component.Factory
+    interface Factory {
+        fun create(
+            @BindsInstance app: Application
+        ): AppComponent
+    }
+
+    fun inject(app: TodoApplication)
+    fun todoFragmentComponent(): TodoFragmentComponent.Factory
+    fun caseFragmentComponent(): CaseFragmentComponent.Factory
 }
