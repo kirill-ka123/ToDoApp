@@ -13,15 +13,18 @@ class CaseViewModel(
 ) : ViewModel() {
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    fun postTodoItemNetwork(todoItem: TodoItem) = scope.launch {
-        todoItemsRepository.postTodoItemNetwork(todoItem, null)
-    }
+    fun addTodoItem(todoItem: TodoItem) =
+        scope.launch {
+            todoItemsRepository.addTodoItem(todoItem, null)
+        }
 
-    fun putTodoItemNetwork(todoItem: TodoItem) = scope.launch {
-        todoItemsRepository.putTodoItemNetwork(todoItem)
-    }
+    fun editTodoItem(todoItem: TodoItem) =
+        scope.launch {
+            todoItemsRepository.editTodoItem(todoItem)
+        }
 
-    fun deleteTodoItemNetwork(id: String) = scope.launch {
-        todoItemsRepository.deleteTodoItemNetwork(id)
-    }
+    fun deleteTodoItem(todoItem: TodoItem) =
+        scope.launch {
+            todoItemsRepository.deleteTodoItem(todoItem)
+        }
 }

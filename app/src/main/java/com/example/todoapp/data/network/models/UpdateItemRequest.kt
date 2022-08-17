@@ -2,11 +2,9 @@ package com.example.todoapp.data.network.models
 
 import com.google.gson.annotations.SerializedName
 
-data class SetItemResponse(
+data class UpdateItemRequest (
     @SerializedName("status")
-    val status: String,
+    val status: String = "ok",
     @SerializedName("element")
-    val todoItemNetwork: TodoItemNetwork,
-    @SerializedName("revision")
-    val revision: Int
+    val todoItemNetwork: TodoItemNetwork
 )

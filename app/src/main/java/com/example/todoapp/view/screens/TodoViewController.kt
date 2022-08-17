@@ -1,6 +1,7 @@
 package com.example.todoapp.view.screens
 
-import android.content.res.Resources
+import android.net.ConnectivityManager
+import android.net.Network
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleOwner
@@ -8,9 +9,8 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
-import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.common.StateVisibility
-import com.example.todoapp.data.network.models.StateRequest
+import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.TodoAdapter
@@ -19,8 +19,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import java.io.IOException
-import java.net.UnknownHostException
 
 class TodoViewController @AssistedInject constructor(
     @Assisted("TodoFragment") private val fragment: TodoFragment,
@@ -29,7 +27,8 @@ class TodoViewController @AssistedInject constructor(
     @Assisted("TodoLifecycleOwner") private val lifecycleOwner: LifecycleOwner,
     @Assisted("TodoViewModel") private val viewModel: TodoViewModel,
     @Assisted("itemTouchHelper") private val itemTouchHelperCallback: ItemTouchHelperCallback?,
-    private val adapter: TodoAdapter
+    private val adapter: TodoAdapter,
+    private val connectivityManager: ConnectivityManager
 ) {
     @AssistedFactory
     interface Factory {
@@ -48,12 +47,6 @@ class TodoViewController @AssistedInject constructor(
         setupVisibility()
         setupVisibilityClickListener()
         setupFabClickListener()
-    }
-
-    fun setupObservers() {
-        setupTodoItemsObserver()
-        setupGetResponseObserver()
-        setupSetResponseObserver()
     }
 
     private fun setupVisibility() {
@@ -75,11 +68,11 @@ class TodoViewController @AssistedInject constructor(
             if (viewModel.stateVisibility == StateVisibility.VISIBLE) {
                 binding.ivVisibility.setImageResource(R.drawable.ic_visibility)
                 viewModel.stateVisibility = StateVisibility.INVISIBLE
-                adapter.differ.submitList(getNotCompletedTodoItems(viewModel.getTodoItems()))
+                adapter.differ.submitList(getNotCompletedTodoItems(viewModel.todoItems))
             } else {
                 binding.ivVisibility.setImageResource(R.drawable.ic_visibility_off)
                 viewModel.stateVisibility = StateVisibility.VISIBLE
-                adapter.differ.submitList(viewModel.getTodoItems())
+                adapter.differ.submitList(viewModel.todoItems)
             }
         }
     }
@@ -103,7 +96,7 @@ class TodoViewController @AssistedInject constructor(
         }
         todoAdapter.setOnCheckboxClickListener { todoItem, isChecked ->
             val newTodoItem = todoItem.copy(done = isChecked)
-            viewModel.putTodoItemNetwork(newTodoItem)
+            viewModel.editTodoItem(newTodoItem)
         }
     }
 
@@ -113,8 +106,9 @@ class TodoViewController @AssistedInject constructor(
         }
     }
 
-    private fun setupTodoItemsObserver() {
+    fun setupTodoItemsObserver() {
         viewModel.getTodoItemsLiveData().observe(lifecycleOwner) { todoItems ->
+            viewModel.todoItems = todoItems
             binding.completeTitle.text =
                 fragment.getString(
                     R.string.number_of_completed,
@@ -129,50 +123,23 @@ class TodoViewController @AssistedInject constructor(
         }
     }
 
-    private fun setupGetResponseObserver() {
-        viewModel.getStateGetRequestLiveData().observe(lifecycleOwner) { state ->
-            when (state) {
-                is StateRequest.Error -> {
-                    binding.tvError.text = mapError(fragment.resources, state.error)
-                    binding.btnError.setOnClickListener {
-                        viewModel.getTodoItemsNetwork()
-                    }
-                    binding.error.visibility = View.VISIBLE
-                }
-                is StateRequest.Success -> {
-                    binding.error.visibility = View.GONE
-                }
+    fun setupNetworkCallback() {
+        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                viewModel.getTodoItemsNetwork()
+                Snackbar.make(rootView, "Есть интернет", Snackbar.LENGTH_SHORT).show()
             }
-        }
-    }
 
-    private fun setupSetResponseObserver() {
-        viewModel.getStateSetRequestLiveData().observe(lifecycleOwner) { state ->
-            when (state) {
-                is StateRequest.Error -> {
-                    Snackbar.make(
-                        rootView,
-                        mapError(fragment.resources, state.error),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-                is StateRequest.Success -> {}
+            override fun onLost(network: Network) {
+                Snackbar.make(rootView, "Нет интернета", Snackbar.LENGTH_INDEFINITE).show()
             }
-        }
-    }
-
-    private fun mapError(resources: Resources, t: Throwable?): String {
-        return when (t) {
-            is UnknownHostException -> resources.getString(R.string.something_went_wrong)
-            is IOException -> resources.getString(R.string.no_internet_connection)
-            else -> resources.getString(R.string.something_went_wrong)
-        }
+        })
     }
 
     private fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
         var numberOfCompleted = 0
         todoItems.forEach { todoItem ->
-            if (todoItem.done) {
+            if (todoItem.done == true) {
                 numberOfCompleted++
             }
         }
@@ -182,7 +149,7 @@ class TodoViewController @AssistedInject constructor(
     private fun getNotCompletedTodoItems(todoItems: List<TodoItem>): List<TodoItem> {
         val newList = mutableListOf<TodoItem>()
         todoItems.forEach { todoItem ->
-            if (!todoItem.done) {
+            if (todoItem.done == false) {
                 newList.add(todoItem)
             }
         }

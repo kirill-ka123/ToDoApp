@@ -46,17 +46,17 @@ class ItemTouchHelperCallback @AssistedInject constructor(
             true -> {
                 val checkbox = viewHolder.itemView.findViewById<CheckBox>(R.id.checkbox)
                 val newTodoItem = todoItem.copy(done = !checkbox.isChecked)
-                todoViewModel.putTodoItemNetwork(newTodoItem)
+                todoViewModel.editTodoItem(newTodoItem)
             }
             false -> {
-                todoViewModel.deleteTodoItemNetwork(todoItem.id)
+                todoViewModel.deleteTodoItem(todoItem)
                 Snackbar.make(
                     view,
                     view.resources.getString(R.string.case_was_deleted),
                     Snackbar.LENGTH_LONG
                 ).apply {
                     setAction(view.resources.getString(R.string.cancel)) {
-                        todoViewModel.postTodoItemNetwork(todoItem, todoItem.id)
+                        todoViewModel.addTodoItem(todoItem)
                     }
                     show()
                 }
