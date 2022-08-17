@@ -12,17 +12,17 @@ import javax.inject.Inject
 class PrepareRequests @Inject constructor() {
     private fun generateId(todoItems: List<TodoItem>): Int {
         return if (todoItems.isNotEmpty()) {
-            todoItems.last().id.toInt() + 1
+            todoItems.last().id + 1
         } else 0
     }
 
     fun prepareAddTodoItemRequest(
         todoItem: TodoItem,
-        id: String?,
+        id: Int?,
         todoItems: List<TodoItem>
     ): TodoItem {
         return if (id == null) {
-            val newId = generateId(todoItems).toString()
+            val newId = generateId(todoItems)
             todoItem.copy(id = newId)
         } else todoItem
     }

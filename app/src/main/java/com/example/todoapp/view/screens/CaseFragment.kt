@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
-import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.TodoApplication
+import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.di.CaseFragmentComponent
 import com.example.todoapp.view.viewmodels.CaseViewModel
 import com.example.todoapp.view.viewmodels.CaseViewModelFactory
@@ -53,7 +53,8 @@ class CaseFragment : Fragment(R.layout.case_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        caseViewController = caseViewControllerFactory.create(this, view, binding, caseViewModel, args)
+        caseViewController =
+            caseViewControllerFactory.create(this, view, binding, caseViewModel, args)
         caseViewController?.setupViews()
     }
 

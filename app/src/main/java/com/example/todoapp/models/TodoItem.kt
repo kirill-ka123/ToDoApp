@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TodoItem(
     @PrimaryKey
-    val id: String,
+    val id: Int,
     val text: String?,
     val importance: Importance?,
     val deadline: Long? = 0L,

@@ -8,6 +8,6 @@ import com.example.todoapp.models.TodoItem
     version = 1,
     entities = [TodoItem::class]
 )
-abstract class TodoItemsDatabase: RoomDatabase() {
+abstract class TodoItemsDatabase : RoomDatabase() {
     abstract fun getTodoItemsDao(): TodoItemsDao
 }

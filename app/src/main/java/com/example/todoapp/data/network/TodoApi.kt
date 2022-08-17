@@ -1,9 +1,9 @@
 package com.example.todoapp.data.network
 
 import com.example.todoapp.data.network.models.GetItemsResponse
+import com.example.todoapp.data.network.models.SetItemsRequest
 import com.example.todoapp.data.network.models.UpdateItemRequest
 import com.example.todoapp.data.network.models.UpdateItemResponse
-import com.example.todoapp.data.network.models.SetItemsRequest
 import retrofit2.http.*
 
 interface TodoApi {

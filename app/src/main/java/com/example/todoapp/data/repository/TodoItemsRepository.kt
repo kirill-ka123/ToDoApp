@@ -19,11 +19,11 @@ import javax.inject.Inject
 
 @AppScope
 class TodoItemsRepository @Inject constructor(
-    private val checkInternet: CheckInternet,
     private val database: TodoItemsDatabase,
     private val todoApi: TodoApi,
+    private val sessionManager: SessionManager,
     private val prepareRequests: PrepareRequests,
-    private val sessionManager: SessionManager
+    private val checkInternet: CheckInternet
 ) {
     fun getTodoItemsLivaData() = database.getTodoItemsDao().getAllTodoItemsLive()
 
@@ -54,7 +54,7 @@ class TodoItemsRepository @Inject constructor(
 
         if (revisionNetwork > revisionDatabase) {
             synchronizationDatabase(todoItems)
-        } else if (revisionNetwork < revisionDatabase) {
+        } else {
             synchronizationNetwork()
         }
     }
@@ -63,8 +63,29 @@ class TodoItemsRepository @Inject constructor(
         if (getTodoItems().isNotEmpty()) {
             database.getTodoItemsDao().deleteAllTodoItems()
         }
-        database.getTodoItemsDao().addAllTodoItems(todoItems)
+        val newList = mergeData(getTodoItems(), todoItems)
+        database.getTodoItemsDao().addAllTodoItems(newList)
         sessionManager.saveRevisionDatabase(sessionManager.fetchRevisionNetwork())
+    }
+
+    // Слияние данных происходит по принципу - в приоритете данные из сети, но если элемент
+    // из локальной базы данных изменялся позже, чем элемент с таким же id из сети, тогда добавляем его
+    private fun mergeData(
+        listFromDatabase: List<TodoItem>,
+        listFromNetwork: List<TodoItem>
+    ): List<TodoItem> {
+        val newList = mutableListOf<TodoItem>()
+        listFromNetwork.forEach { todoItemFromNetwork ->
+            val todoItem = listFromDatabase.find { todoItemFromDatabase ->
+                todoItemFromNetwork.id == todoItemFromDatabase.id
+            }
+            if (todoItem == null) {
+                newList.add(todoItemFromNetwork)
+            } else if (todoItem.changedAt?.toInt() ?: 0 > todoItemFromNetwork.changedAt?.toInt() ?: 0) {
+                newList.add(todoItem)
+            } else newList.add(todoItemFromNetwork)
+        }
+        return newList
     }
 
     private suspend fun synchronizationNetwork() {
@@ -90,11 +111,11 @@ class TodoItemsRepository @Inject constructor(
 
     private fun getListAfterGetRequest(body: GetItemsResponse): List<TodoItem> {
         return body.todoItemsNetwork.map { it.mapToTodoItem() }.sortedBy { todoItem ->
-            todoItem.id.toInt()
+            todoItem.id
         }
     }
 
-    suspend fun addTodoItem(todoItem: TodoItem, id: String?) = withContext(Dispatchers.IO) {
+    suspend fun addTodoItem(todoItem: TodoItem, id: Int?) = withContext(Dispatchers.IO) {
         val newTodoItem = prepareRequests.prepareAddTodoItemRequest(todoItem, id, getTodoItems())
         addTodoItemDatabase(newTodoItem)
         postTodoItemNetwork(newTodoItem)
@@ -122,12 +143,12 @@ class TodoItemsRepository @Inject constructor(
 
     private suspend fun putTodoItemNetwork(todoItem: TodoItem) {
         val updateItemRequest = prepareRequests.preparePutRequest(todoItem)
-        retrofitCall { todoApi.putTodoItem(todoItem.id, updateItemRequest) }
+        retrofitCall { todoApi.putTodoItem(todoItem.id.toString(), updateItemRequest) }
     }
 
     suspend fun deleteTodoItem(todoItem: TodoItem) = withContext(Dispatchers.IO) {
         deleteTodoItemDatabase(todoItem)
-        deleteTodoItemNetwork(todoItem.id)
+        deleteTodoItemNetwork(todoItem.id.toString())
     }
 
     private suspend fun deleteTodoItemDatabase(todoItem: TodoItem) {

@@ -1,7 +1,6 @@
 package com.example.todoapp.view.screens
 
 import android.net.ConnectivityManager
-import android.net.Network
 import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
@@ -12,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.data.network.CheckInternet
+import com.example.todoapp.data.network.models.StateNetwork
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.view.ItemTouchHelperCallback
@@ -104,7 +104,8 @@ class TodoViewController @AssistedInject constructor(
             )
         }
         todoAdapter.setOnCheckboxClickListener { todoItem, isChecked ->
-            val newTodoItem = todoItem.copy(done = isChecked)
+            val newTodoItem =
+                todoItem.copy(done = isChecked, changedAt = System.currentTimeMillis() / 1000L)
             viewModel.editTodoItem(newTodoItem)
         }
     }
@@ -133,28 +134,24 @@ class TodoViewController @AssistedInject constructor(
     }
 
     fun setupNetworkCallback() {
-        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        connectivityManager.registerDefaultNetworkCallback(viewModel.networkCallback)
+        setupStateNetworkObserver()
     }
 
     fun unregisterNetworkCallback() {
         try {
-            connectivityManager.unregisterNetworkCallback(networkCallback)
+            connectivityManager.unregisterNetworkCallback(viewModel.networkCallback)
         } catch (e: Exception) {
             Log.e("network", "NetworkCallback was not registered or already unregistered")
         }
     }
 
-    private var networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            fragment.requireActivity().runOnUiThread {
-                binding.internetTitle.visibility = View.GONE
-            }
-            viewModel.getTodoItemsNetwork()
-        }
-
-        override fun onLost(network: Network) {
-            fragment.requireActivity().runOnUiThread {
-                binding.internetTitle.visibility = View.VISIBLE
+    private fun setupStateNetworkObserver() {
+        viewModel.stateNetwork.observe(lifecycleOwner) { stateNetwork ->
+            when (stateNetwork) {
+                StateNetwork.AVAILABLE -> binding.internetTitle.visibility = View.GONE
+                StateNetwork.LOST -> binding.internetTitle.visibility = View.VISIBLE
+                else -> throw IllegalArgumentException()
             }
         }
     }

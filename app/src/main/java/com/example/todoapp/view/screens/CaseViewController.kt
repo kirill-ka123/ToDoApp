@@ -6,8 +6,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
-import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.common.Utils
+import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.view.viewmodels.CaseViewModel
@@ -176,7 +176,7 @@ class CaseViewController @AssistedInject constructor(
     }
 
     private fun createNewTodoItem(importance: Importance) = TodoItem(
-        "",
+        0,
         binding.etCase.text.toString(),
         importance,
         deadline,

@@ -3,7 +3,6 @@ package com.example.todoapp.data.network
 import com.example.todoapp.data.SessionManager
 import com.example.todoapp.di.scopes.AppScope
 import okhttp3.Interceptor
-import okhttp3.Request
 import okhttp3.Response
 import javax.inject.Inject
 

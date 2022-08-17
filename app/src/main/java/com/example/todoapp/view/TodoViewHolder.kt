@@ -10,7 +10,8 @@ import com.example.todoapp.databinding.TodoItemBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 
-class TodoViewHolder(private val itemBinding: TodoItemBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+class TodoViewHolder(private val itemBinding: TodoItemBinding) :
+    RecyclerView.ViewHolder(itemBinding.root) {
     fun bind(
         todoItem: TodoItem,
         onItemClickListener: ((TodoItem) -> Unit)?,

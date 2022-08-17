@@ -10,11 +10,13 @@ import com.example.todoapp.models.TodoItem
 import javax.inject.Inject
 
 @AppScope
-class TodoAdapter @Inject constructor(todoItemDiffCalculator: TodoItemDiffCalculator) : RecyclerView.Adapter<TodoViewHolder>() {
+class TodoAdapter @Inject constructor(todoItemDiffCalculator: TodoItemDiffCalculator) :
+    RecyclerView.Adapter<TodoViewHolder>() {
     val differ = AsyncListDiffer(this, todoItemDiffCalculator)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
-        val itemBinding = TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val itemBinding =
+            TodoItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TodoViewHolder(itemBinding)
     }
 

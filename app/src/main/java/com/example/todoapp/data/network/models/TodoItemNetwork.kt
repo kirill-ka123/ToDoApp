@@ -25,7 +25,7 @@ data class TodoItemNetwork(
     val lastUpdatedBy: String? = "model"
 ) {
     fun mapToTodoItem() = TodoItem(
-        id, text,
+        id.toInt(), text,
         try {
             importance?.let {
                 Importance.valueOf(it.uppercase())
@@ -37,7 +37,7 @@ data class TodoItemNetwork(
 
     companion object {
         fun TodoItem.mapToTodoItemNetwork() = TodoItemNetwork(
-            id,
+            id.toString(),
             text,
             importance?.name?.lowercase(),
             deadline,
