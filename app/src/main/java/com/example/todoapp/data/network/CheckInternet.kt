@@ -1,6 +1,5 @@
 package com.example.todoapp.data.network
 
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.example.todoapp.di.scopes.AppScope
@@ -8,7 +7,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 @AppScope
-class CheckInternet @Inject constructor(private val appContext: Context) {
+class CheckInternet @Inject constructor(private val connectivityManager: ConnectivityManager) {
     suspend fun <T> callWithInternetCheck(
         call: suspend () -> (T)
     ): T {
@@ -17,10 +16,7 @@ class CheckInternet @Inject constructor(private val appContext: Context) {
         } else throw IOException("Нет интернет соединения")
     }
 
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = appContext.getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
+    fun hasInternetConnection(): Boolean {
         val activeNetwork = connectivityManager.activeNetwork ?: return false
         val capabilities =
             connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false

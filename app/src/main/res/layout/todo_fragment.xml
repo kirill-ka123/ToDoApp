@@ -1,133 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_primary">
+    android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <TextView
+        android:id="@+id/internetTitle"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:background="@color/back_primary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/red"
+        android:textColor="@color/white"
+        android:text="@string/no_internet"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:collapsedTitleTextAppearance="@style/titleInToolbar"
-            app:collapsedTitleTextColor="@color/label_primary"
-            app:expandedTitleMarginBottom="48dp"
-            app:expandedTitleMarginStart="60dp"
-            app:expandedTitleTextAppearance="@style/title"
-            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:title="@string/title">
-
-            <TextView
-                android:id="@+id/completeTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="60dp"
-                android:layout_marginBottom="18dp"
-                android:text="@string/number_of_completed"
-                android:textAppearance="@style/number_of_completed"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="1000" />
-
-            <ImageView
-                android:id="@+id/ivVisibility"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ic_visibility_off"
-                app:layout_collapseMode="pin"
-                app:tint="@color/blue" />
-
-            <com.example.todoapp.common.NonClickableToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                app:layout_collapseMode="pin" />
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+        android:background="@color/back_primary">
 
-        <FrameLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="170dp"
+            android:background="@color/back_primary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCases"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="40dp"
-                android:background="@drawable/background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:collapsedTitleTextAppearance="@style/titleInToolbar"
+                app:collapsedTitleTextColor="@color/label_primary"
+                app:expandedTitleMarginBottom="48dp"
+                app:expandedTitleMarginStart="60dp"
+                app:expandedTitleTextAppearance="@style/title"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+                app:title="@string/title">
 
-        </FrameLayout>
-    </androidx.core.widget.NestedScrollView>
+                <TextView
+                    android:id="@+id/completeTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="@string/number_of_completed"
+                    android:textAppearance="@style/number_of_completed"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="1000" />
 
-    <LinearLayout
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="90dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_anchor="@id/fab"
-        app:layout_anchorGravity="start|center">
+                <ImageView
+                    android:id="@+id/ivVisibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_visibility_off"
+                    app:layout_collapseMode="pin"
+                    app:tint="@color/blue" />
 
-        <TextView
-            android:id="@+id/tvError"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:maxLines="2"
-            android:textAppearance="@style/title_item" />
+                <com.example.todoapp.common.NonClickableToolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    app:layout_collapseMode="pin" />
 
-        <Button
-            android:id="@+id/btnError"
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCases"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="40dp"
+                    android:background="@drawable/background"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </FrameLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/blue"
-            android:text="@string/repeat"
-            android:textSize="12sp" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="50dp"
+            android:src="@drawable/ic_add"
+            app:backgroundTint="@color/blue"
+            app:fabSize="normal"
+            app:layout_anchor="@id/nestedScrollView"
+            app:layout_anchorGravity="bottom|end"
+            app:tint="@color/white" />
 
-    </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="50dp"
-        android:src="@drawable/ic_add"
-        app:backgroundTint="@color/blue"
-        app:fabSize="normal"
-        app:layout_anchor="@id/nestedScrollView"
-        app:layout_anchorGravity="bottom|end"
-        app:tint="@color/white" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

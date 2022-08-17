@@ -5,8 +5,8 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.databinding.TodoItemBinding
 import com.example.todoapp.common.Utils
+import com.example.todoapp.databinding.TodoItemBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
 
@@ -135,7 +135,7 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) : RecyclerView.Vi
         onCheckboxClickListener: ((TodoItem, Boolean) -> Unit)?
     ) {
         itemBinding.apply {
-            tvTitleItem
+            titleItem
                 .setOnClickListener {
                     onItemClickListener?.let {
                         it(todoItem)

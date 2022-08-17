@@ -7,12 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.room.Room
 import com.example.todoapp.R
-import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.TodoApplication
-import com.example.todoapp.data.db.TodoItemsDatabase
-import com.example.todoapp.di.DatabaseModule
+import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.di.TodoFragmentComponent
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.viewmodels.TodoViewModel
@@ -78,6 +75,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        todoViewController?.unregisterNetworkCallback()
         todoViewController = null
         itemTouchHelperCallback = null
         _binding = null

@@ -2,6 +2,7 @@ package com.example.todoapp.view.screens
 
 import android.net.ConnectivityManager
 import android.net.Network
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LifecycleOwner
@@ -10,12 +11,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.common.StateVisibility
+import com.example.todoapp.data.network.CheckInternet
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.models.TodoItem
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.TodoAdapter
 import com.example.todoapp.view.viewmodels.TodoViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,7 +29,8 @@ class TodoViewController @AssistedInject constructor(
     @Assisted("TodoViewModel") private val viewModel: TodoViewModel,
     @Assisted("itemTouchHelper") private val itemTouchHelperCallback: ItemTouchHelperCallback?,
     private val adapter: TodoAdapter,
-    private val connectivityManager: ConnectivityManager
+    private val connectivityManager: ConnectivityManager,
+    private val checkInternet: CheckInternet
 ) {
     @AssistedFactory
     interface Factory {
@@ -47,6 +49,13 @@ class TodoViewController @AssistedInject constructor(
         setupVisibility()
         setupVisibilityClickListener()
         setupFabClickListener()
+        setupInternetTitle()
+    }
+
+    private fun setupInternetTitle() {
+        if (!checkInternet.hasInternetConnection()) {
+            binding.internetTitle.visibility = View.VISIBLE
+        }
     }
 
     private fun setupVisibility() {
@@ -124,16 +133,30 @@ class TodoViewController @AssistedInject constructor(
     }
 
     fun setupNetworkCallback() {
-        connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                viewModel.getTodoItemsNetwork()
-                Snackbar.make(rootView, "Есть интернет", Snackbar.LENGTH_SHORT).show()
-            }
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+    }
 
-            override fun onLost(network: Network) {
-                Snackbar.make(rootView, "Нет интернета", Snackbar.LENGTH_INDEFINITE).show()
+    fun unregisterNetworkCallback() {
+        try {
+            connectivityManager.unregisterNetworkCallback(networkCallback)
+        } catch (e: Exception) {
+            Log.e("network", "NetworkCallback was not registered or already unregistered")
+        }
+    }
+
+    private var networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            fragment.requireActivity().runOnUiThread {
+                binding.internetTitle.visibility = View.GONE
             }
-        })
+            viewModel.getTodoItemsNetwork()
+        }
+
+        override fun onLost(network: Network) {
+            fragment.requireActivity().runOnUiThread {
+                binding.internetTitle.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
