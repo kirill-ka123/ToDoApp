@@ -3,9 +3,12 @@ package com.example.todoapp.data.network
 import com.example.todoapp.data.network.models.SetItemRequest
 import com.example.todoapp.data.network.models.TodoItemNetwork
 import com.example.todoapp.data.network.models.TodoItemNetwork.Companion.mapToTodoItemNetwork
+import com.example.todoapp.di.scopes.AppScope
 import com.example.todoapp.models.TodoItem
+import javax.inject.Inject
 
-class PrepareRequests {
+@AppScope
+class PrepareRequests @Inject constructor() {
     fun preparePostRequest(
         currentList: List<TodoItem>,
         todoItem: TodoItem,

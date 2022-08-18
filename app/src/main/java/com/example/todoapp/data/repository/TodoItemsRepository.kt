@@ -1,14 +1,16 @@
 package com.example.todoapp.data.repository
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.todoapp.data.network.CheckInternet
 import com.example.todoapp.data.network.HandleResponses
 import com.example.todoapp.data.network.PrepareRequests
-import com.example.todoapp.data.network.RetrofitInstance
+import com.example.todoapp.data.network.TodoApi
 import com.example.todoapp.data.network.models.SetItemRequest
 import com.example.todoapp.data.network.models.StateRequest
+import com.example.todoapp.di.scopes.AppScope
 import com.example.todoapp.models.TodoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -16,39 +18,15 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class TodoItemsRepository(
+@AppScope
+class TodoItemsRepository @Inject constructor(
     private val appContext: Context,
+    private val todoApi: TodoApi,
     private val prepareRequests: PrepareRequests,
     private val handleResponses: HandleResponses
 ) {
-
-    companion object {
-        @Volatile
-        private var instance: TodoItemsRepository? = null
-
-        fun getRepository(
-            appContext: Context,
-            prepareRequests: PrepareRequests,
-            handleResponses: HandleResponses
-        ) =
-            instance ?: synchronized(TodoItemsRepository::class) {
-                instance ?: TodoItemsRepository(appContext, prepareRequests, handleResponses).also {
-                    instance = it
-                }
-            }
-
-        const val NETWORK_RETRY_DELAY = 1000L
-    }
-
-    private suspend fun <T> callWithInternetCheck(
-        call: suspend () -> (Response<T>)
-    ): Response<T> {
-        if (CheckInternet.hasInternetConnection(appContext)) {
-            return call()
-        } else throw IOException("Нет интернет соединения")
-    }
-
     private val _todoItemsLiveData: MutableLiveData<List<TodoItem>> = MutableLiveData()
     val todoItemsLiveData: LiveData<List<TodoItem>> = _todoItemsLiveData
 
@@ -57,6 +35,14 @@ class TodoItemsRepository(
 
     private val _stateSetRequestLiveData: MutableLiveData<StateRequest> = MutableLiveData()
     val stateSetRequestLiveData: LiveData<StateRequest> = _stateSetRequestLiveData
+
+    private suspend fun <T> callWithInternetCheck(
+        call: suspend () -> (Response<T>)
+    ): Response<T> {
+        if (hasInternetConnection()) {
+            return call()
+        } else throw IOException("Нет интернет соединения")
+    }
 
     suspend fun getTodoItemsNetwork() = withContext(Dispatchers.IO) {
         getTodoItemsInFlow().retry(1) {
@@ -70,12 +56,11 @@ class TodoItemsRepository(
         }
     }
 
-
     private suspend fun getTodoItemsInFlow(): Flow<List<TodoItem>> {
         return flow {
             val response =
                 callWithInternetCheck {
-                    RetrofitInstance.getApi(appContext).getTodoItems()
+                    todoApi.getTodoItems()
                 }
             emit(handleResponses.handleGetResponse(response))
         }.flowOn(Dispatchers.IO)
@@ -100,7 +85,7 @@ class TodoItemsRepository(
     ): Flow<List<TodoItem>> {
         return flow {
             val response = callWithInternetCheck {
-                RetrofitInstance.getApi(appContext).postTodoItem(setItemRequest)
+                todoApi.postTodoItem(setItemRequest)
             }
             emit(handleResponses.handlePostResponse(response, todoItemsLiveData.value.orEmpty()))
         }.flowOn(Dispatchers.IO)
@@ -125,7 +110,7 @@ class TodoItemsRepository(
     ): Flow<List<TodoItem>> {
         return flow {
             val response = callWithInternetCheck {
-                RetrofitInstance.getApi(appContext).putTodoItem(id, setItemRequest)
+                todoApi.putTodoItem(id, setItemRequest)
             }
             emit(handleResponses.handlePutResponse(response, todoItemsLiveData.value.orEmpty()))
         }.flowOn(Dispatchers.IO)
@@ -146,9 +131,28 @@ class TodoItemsRepository(
     private fun deleteTodoItemInFlow(id: String): Flow<List<TodoItem>> {
         return flow {
             val response = callWithInternetCheck {
-                RetrofitInstance.getApi(appContext).deleteTodoItem(id)
+                todoApi.deleteTodoItem(id)
             }
             emit(handleResponses.handleDeleteResponse(response, todoItemsLiveData.value.orEmpty()))
         }.flowOn(Dispatchers.IO)
+    }
+
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = appContext.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
+
+    companion object {
+        const val NETWORK_RETRY_DELAY = 1000L
     }
 }

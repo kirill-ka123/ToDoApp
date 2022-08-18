@@ -2,21 +2,33 @@ package com.example.todoapp.view
 
 import android.graphics.Canvas
 import android.view.View
+import android.widget.CheckBox
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
+import com.example.todoapp.view.viewmodels.TodoViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.todo_item.view.*
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class ItemTouchHelperCallback(
-    private val todoViewModel: TodoViewModel,
-    private val todoAdapter: TodoAdapter,
-    private val view: View
+class ItemTouchHelperCallback @AssistedInject constructor(
+    @Assisted("TodoViewModel") private val todoViewModel: TodoViewModel,
+    @Assisted("view") private val view: View,
+    private val todoAdapter: TodoAdapter
 ) : ItemTouchHelper.SimpleCallback(
     0,
     ItemTouchHelper.RIGHT or ItemTouchHelper.LEFT
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("TodoViewModel") todoViewModel: TodoViewModel,
+            @Assisted("view") view: View,
+        ): ItemTouchHelperCallback
+    }
+
     private var rightOrLeft: Boolean? = null
     override fun onMove(
         recyclerView: RecyclerView,
@@ -32,7 +44,8 @@ class ItemTouchHelperCallback(
 
         when (rightOrLeft) {
             true -> {
-                val newTodoItem = todoItem.copy(done = !viewHolder.itemView.checkbox.isChecked)
+                val checkbox = viewHolder.itemView.findViewById<CheckBox>(R.id.checkbox)
+                val newTodoItem = todoItem.copy(done = !checkbox.isChecked)
                 todoViewModel.putTodoItemNetwork(newTodoItem)
             }
             false -> {

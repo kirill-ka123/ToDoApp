@@ -1,9 +1,12 @@
-package com.example.todoapp.data.network
+package com.example.todoapp.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.todoapp.di.scopes.AppScope
+import javax.inject.Inject
 
-class SessionManager(context: Context) {
+@AppScope
+class SessionManager @Inject constructor(context: Context) {
     private var prefs: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 

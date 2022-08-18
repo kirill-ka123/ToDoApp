@@ -1,12 +1,16 @@
 package com.example.todoapp.data.network
 
+import com.example.todoapp.data.SessionManager
 import com.example.todoapp.data.network.models.GetItemsResponse
 import com.example.todoapp.data.network.models.SetItemResponse
+import com.example.todoapp.di.scopes.AppScope
 import com.example.todoapp.models.TodoItem
 import retrofit2.Response
 import java.net.UnknownHostException
+import javax.inject.Inject
 
-class HandleResponses(
+@AppScope
+class HandleResponses @Inject constructor(
     private val sessionManager: SessionManager
 ) {
     private fun <T> callWithResponseCheck(

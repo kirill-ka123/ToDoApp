@@ -1,4 +1,4 @@
-package com.example.todoapp.view
+package com.example.todoapp.view.screens
 
 import android.view.View
 import android.widget.ArrayAdapter
@@ -6,20 +6,36 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
+import com.example.todoapp.common.Utils
+import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
-import com.example.todoapp.common.Utils
+import com.example.todoapp.view.viewmodels.CaseViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
-import kotlinx.android.synthetic.main.case_fragment.view.*
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class CaseViewController(
-    private val fragment: CaseFragment,
-    private val rootView: View,
-    private val viewModel: CaseViewModel,
-    args: CaseFragmentArgs
+class CaseViewController @AssistedInject constructor(
+    @Assisted("CaseFragment") private val fragment: CaseFragment,
+    @Assisted("CaseFragmentView") private val rootView: View,
+    @Assisted("CaseFragmentBinding") private val binding: CaseFragmentBinding,
+    @Assisted("CaseViewModel") private val viewModel: CaseViewModel,
+    @Assisted("CaseArgs") args: CaseFragmentArgs
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("CaseFragment") fragment: CaseFragment,
+            @Assisted("CaseFragmentView") rootView: View,
+            @Assisted("CaseFragmentBinding") binding: CaseFragmentBinding,
+            @Assisted("CaseViewModel") viewModel: CaseViewModel,
+            @Assisted("CaseArgs") args: CaseFragmentArgs
+        ): CaseViewController
+    }
+
     private var deadline: Long = 0L
     private val todoItem = args.case
 
@@ -34,21 +50,21 @@ class CaseViewController(
 
     private fun setupTodoItemInfo() {
         todoItem?.let {
-            rootView.etCase.setText(it.text)
-            rootView.spinnerImportance.setSelection(convertImportanceToInt(it.importance))
+            binding.etCase.setText(it.text)
+            binding.spinnerImportance.setSelection(convertImportanceToInt(it.importance))
             if (it.deadline > 0L) {
                 deadline = it.deadline
-                rootView.switchDeadline.isChecked = true
-                rootView.tvDate.visibility = View.VISIBLE
-                rootView.tvDate.text = Utils.convertUnixToDate(it.deadline)
+                binding.switchDeadline.isChecked = true
+                binding.tvDate.visibility = View.VISIBLE
+                binding.tvDate.text = Utils.convertUnixToDate(it.deadline)
             }
-            rootView.tvDelete.setTextColor(
+            binding.tvDelete.setTextColor(
                 ContextCompat.getColor(
                     fragment.requireContext(),
                     R.color.red
                 )
             )
-            rootView.ivDelete.setColorFilter(
+            binding.ivDelete.setColorFilter(
                 ContextCompat.getColor(
                     fragment.requireContext(),
                     R.color.red
@@ -69,17 +85,17 @@ class CaseViewController(
             )
         )
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_layout)
-        rootView.spinnerImportance.adapter = adapter
+        binding.spinnerImportance.adapter = adapter
     }
 
     private fun setupCloseClickListener() {
-        rootView.ivClose.setOnClickListener {
+        binding.ivClose.setOnClickListener {
             fragment.findNavController().popBackStack()
         }
     }
 
     private fun setupDeleteClickListener() {
-        rootView.delete.setOnClickListener {
+        binding.delete.setOnClickListener {
             if (todoItem != null) {
                 viewModel.deleteTodoItemNetwork(todoItem.id)
             }
@@ -88,22 +104,22 @@ class CaseViewController(
     }
 
     private fun setupSwitchClickListener() {
-        rootView.switchDeadline.setOnCheckedChangeListener { _, isChecked ->
+        binding.switchDeadline.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 showDatePickerDialog()
             } else {
                 deadline = 0L
-                rootView.tvDate.visibility = View.INVISIBLE
+                binding.tvDate.visibility = View.INVISIBLE
             }
         }
     }
 
     private fun setupSaveClickListener() {
-        rootView.tvSave.setOnClickListener {
+        binding.tvSave.setOnClickListener {
             val importance =
-                Utils.convertStringIdToImportance(rootView.spinnerImportance.selectedItemPosition)
+                Utils.convertStringIdToImportance(binding.spinnerImportance.selectedItemPosition)
             if (todoItem == null) {
-                if (rootView.etCase.text.toString() != "") {
+                if (binding.etCase.text.toString() != "") {
                     val newTodoItem = createNewTodoItem(importance)
                     viewModel.postTodoItemNetwork(newTodoItem)
                     fragment.findNavController().popBackStack()
@@ -141,17 +157,17 @@ class CaseViewController(
 
     private fun setupDatePickerDialogClickListeners(datePicker: MaterialDatePicker<Long>) {
         datePicker.addOnNegativeButtonClickListener {
-            rootView.switchDeadline.isChecked = false
+            binding.switchDeadline.isChecked = false
             deadline = 0L
         }
 
         datePicker.addOnCancelListener {
-            rootView.switchDeadline.isChecked = false
+            binding.switchDeadline.isChecked = false
             deadline = 0L
         }
 
         datePicker.addOnPositiveButtonClickListener { selection ->
-            rootView.tvDate.apply {
+            binding.tvDate.apply {
                 deadline = selection / 1000L
                 visibility = View.VISIBLE
                 text = Utils.convertUnixToDate(selection / 1000L)
@@ -161,7 +177,7 @@ class CaseViewController(
 
     private fun createNewTodoItem(importance: Importance) = TodoItem(
         "",
-        rootView.etCase.text.toString(),
+        binding.etCase.text.toString(),
         importance,
         deadline,
         false,
@@ -169,7 +185,7 @@ class CaseViewController(
     )
 
     private fun changeTodoItem(todoItem: TodoItem, importance: Importance) = todoItem.copy(
-        text = rootView.etCase.text.toString(),
+        text = binding.etCase.text.toString(),
         importance = importance,
         deadline = deadline,
         changedAt = System.currentTimeMillis() / 1000L

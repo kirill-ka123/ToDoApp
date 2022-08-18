@@ -1,18 +1,17 @@
-package com.example.todoapp.view
+package com.example.todoapp.view.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.data.repository.TodoItemsRepository
 import com.example.todoapp.models.TodoItem
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TodoViewModel(
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModel() {
     init {
-        getRequestTodoItemsNetwork()
+        getTodoItemsNetwork()
     }
 
     var stateVisibility = StateVisibility.VISIBLE
@@ -25,7 +24,7 @@ class TodoViewModel(
 
     fun getStateSetRequestLiveData() = todoItemsRepository.stateSetRequestLiveData
 
-    fun getRequestTodoItemsNetwork() =
+    fun getTodoItemsNetwork() =
         viewModelScope.launch {
             todoItemsRepository.getTodoItemsNetwork()
         }

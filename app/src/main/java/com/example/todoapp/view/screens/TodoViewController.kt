@@ -1,4 +1,4 @@
-package com.example.todoapp.view
+package com.example.todoapp.view.screens
 
 import android.content.res.Resources
 import android.view.View
@@ -8,21 +8,41 @@ import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
-import com.example.todoapp.models.TodoItem
-import com.example.todoapp.data.network.models.StateRequest
 import com.example.todoapp.common.StateVisibility
+import com.example.todoapp.data.network.models.StateRequest
+import com.example.todoapp.databinding.TodoFragmentBinding
+import com.example.todoapp.models.TodoItem
+import com.example.todoapp.view.ItemTouchHelperCallback
+import com.example.todoapp.view.TodoAdapter
+import com.example.todoapp.view.viewmodels.TodoViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.todo_fragment.view.*
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import java.io.IOException
 import java.net.UnknownHostException
 
-class TodoViewController(
-    private val fragment: TodoFragment,
-    private val rootView: View,
-    private val lifecycleOwner: LifecycleOwner,
-    private val viewModel: TodoViewModel,
+class TodoViewController @AssistedInject constructor(
+    @Assisted("TodoFragment") private val fragment: TodoFragment,
+    @Assisted("TodoFragmentView") private val rootView: View,
+    @Assisted("TodoFragmentBinding") private val binding: TodoFragmentBinding,
+    @Assisted("TodoLifecycleOwner") private val lifecycleOwner: LifecycleOwner,
+    @Assisted("TodoViewModel") private val viewModel: TodoViewModel,
+    @Assisted("itemTouchHelper") private val itemTouchHelperCallback: ItemTouchHelperCallback?,
     private val adapter: TodoAdapter
 ) {
+    @AssistedFactory
+    interface Factory {
+        fun create(
+            @Assisted("TodoFragment") fragment: TodoFragment,
+            @Assisted("TodoFragmentView") rootView: View,
+            @Assisted("TodoFragmentBinding") binding: TodoFragmentBinding,
+            @Assisted("TodoLifecycleOwner") lifecycleOwner: LifecycleOwner,
+            @Assisted("TodoViewModel") viewModel: TodoViewModel,
+            @Assisted("itemTouchHelper") itemTouchHelperCallback: ItemTouchHelperCallback?
+        ): TodoViewController
+    }
+
     fun setupViews() {
         setupRecyclerView()
         setupVisibility()
@@ -38,26 +58,26 @@ class TodoViewController(
 
     private fun setupVisibility() {
         if (viewModel.stateVisibility == StateVisibility.VISIBLE) {
-            rootView.ivVisibility.setImageResource(R.drawable.ic_visibility_off)
+            binding.ivVisibility.setImageResource(R.drawable.ic_visibility_off)
         } else {
-            rootView.ivVisibility.setImageResource(R.drawable.ic_visibility)
+            binding.ivVisibility.setImageResource(R.drawable.ic_visibility)
         }
     }
 
     private fun setupFabClickListener() {
-        rootView.fab.setOnClickListener {
+        binding.fab.setOnClickListener {
             findNavController(fragment).navigate(R.id.action_todoFragment_to_caseFragment)
         }
     }
 
     private fun setupVisibilityClickListener() {
-        rootView.ivVisibility.setOnClickListener {
+        binding.ivVisibility.setOnClickListener {
             if (viewModel.stateVisibility == StateVisibility.VISIBLE) {
-                rootView.ivVisibility.setImageResource(R.drawable.ic_visibility)
+                binding.ivVisibility.setImageResource(R.drawable.ic_visibility)
                 viewModel.stateVisibility = StateVisibility.INVISIBLE
                 adapter.differ.submitList(getNotCompletedTodoItems(viewModel.getTodoItems()))
             } else {
-                rootView.ivVisibility.setImageResource(R.drawable.ic_visibility_off)
+                binding.ivVisibility.setImageResource(R.drawable.ic_visibility_off)
                 viewModel.stateVisibility = StateVisibility.VISIBLE
                 adapter.differ.submitList(viewModel.getTodoItems())
             }
@@ -67,7 +87,7 @@ class TodoViewController(
     private fun setupRecyclerView() {
         setupRecyclerClickListeners(adapter)
         setupItemTouchHelper(adapter)
-        rootView.rvCases.apply {
+        binding.rvCases.apply {
             adapter = this@TodoViewController.adapter
             layoutManager = LinearLayoutManager(fragment.activity)
         }
@@ -88,14 +108,14 @@ class TodoViewController(
     }
 
     private fun setupItemTouchHelper(todoAdapter: TodoAdapter) {
-        val itemTouchHelperCallback =
-            ItemTouchHelperCallback(viewModel, todoAdapter, rootView)
-        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(rootView.rvCases)
+        itemTouchHelperCallback?.let {
+            ItemTouchHelper(it).attachToRecyclerView(binding.rvCases)
+        }
     }
 
     private fun setupTodoItemsObserver() {
         viewModel.getTodoItemsLiveData().observe(lifecycleOwner) { todoItems ->
-            rootView.completeTitle.text =
+            binding.completeTitle.text =
                 fragment.getString(
                     R.string.number_of_completed,
                     getNumberOfCompleted(todoItems)
@@ -113,14 +133,14 @@ class TodoViewController(
         viewModel.getStateGetRequestLiveData().observe(lifecycleOwner) { state ->
             when (state) {
                 is StateRequest.Error -> {
-                    rootView.tv_error.text = mapError(fragment.resources, state.error)
-                    rootView.btn_error.setOnClickListener {
-                        viewModel.getRequestTodoItemsNetwork()
+                    binding.tvError.text = mapError(fragment.resources, state.error)
+                    binding.btnError.setOnClickListener {
+                        viewModel.getTodoItemsNetwork()
                     }
-                    rootView.error.visibility = View.VISIBLE
+                    binding.error.visibility = View.VISIBLE
                 }
                 is StateRequest.Success -> {
-                    rootView.error.visibility = View.GONE
+                    binding.error.visibility = View.GONE
                 }
             }
         }
@@ -141,7 +161,7 @@ class TodoViewController(
         }
     }
 
-    fun mapError(resources: Resources, t: Throwable?): String {
+    private fun mapError(resources: Resources, t: Throwable?): String {
         return when (t) {
             is UnknownHostException -> resources.getString(R.string.something_went_wrong)
             is IOException -> resources.getString(R.string.no_internet_connection)
@@ -149,7 +169,7 @@ class TodoViewController(
         }
     }
 
-    fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
+    private fun getNumberOfCompleted(todoItems: List<TodoItem>): String {
         var numberOfCompleted = 0
         todoItems.forEach { todoItem ->
             if (todoItem.done) {
@@ -159,7 +179,7 @@ class TodoViewController(
         return numberOfCompleted.toString()
     }
 
-    fun getNotCompletedTodoItems(todoItems: List<TodoItem>): List<TodoItem> {
+    private fun getNotCompletedTodoItems(todoItems: List<TodoItem>): List<TodoItem> {
         val newList = mutableListOf<TodoItem>()
         todoItems.forEach { todoItem ->
             if (!todoItem.done) {

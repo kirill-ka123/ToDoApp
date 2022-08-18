@@ -1,34 +1,27 @@
 package com.example.todoapp
 
 import android.app.Application
-import android.content.Context
 import androidx.work.*
-import com.example.todoapp.data.network.HandleResponses
 import com.example.todoapp.data.network.NetworkWorker
 import com.example.todoapp.data.network.NetworkWorker.Companion.WORK_NAME
-import com.example.todoapp.data.network.PrepareRequests
-import com.example.todoapp.data.network.SessionManager
 import com.example.todoapp.data.repository.TodoItemsRepository
-import com.example.todoapp.ioc.ApplicationComponent
+import com.example.todoapp.di.AppComponent
+import com.example.todoapp.di.DaggerAppComponent
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class TodoApplication : Application() {
 
-    val applicationComponent by lazy { ApplicationComponent(this) }
+    lateinit var appComponent: AppComponent
+        private set
 
+    @Inject
     lateinit var todoItemsRepository: TodoItemsRepository
-
-    companion object {
-        fun get(context: Context): TodoApplication = context.applicationContext as TodoApplication
-    }
 
     override fun onCreate() {
         super.onCreate()
-        todoItemsRepository = TodoItemsRepository.getRepository(
-            applicationContext,
-            PrepareRequests(),
-            HandleResponses(SessionManager(applicationContext))
-        )
+        appComponent = DaggerAppComponent.factory().create(this)
+        appComponent.inject(this)
         setupWorker()
     }
 
@@ -44,7 +37,7 @@ class TodoApplication : Application() {
         val workManager = WorkManager.getInstance(applicationContext)
         workManager.enqueueUniquePeriodicWork(
             WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.REPLACE,
             networkRequest
         )
     }

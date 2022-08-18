@@ -1,10 +1,14 @@
 package com.example.todoapp.data.network
 
+import com.example.todoapp.data.SessionManager
+import com.example.todoapp.di.scopes.AppScope
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class RevisionInterceptor(private val sessionManager: SessionManager): Interceptor {
-
+@AppScope
+class RevisionInterceptor @Inject constructor(private val sessionManager: SessionManager) :
+    Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val requestBuilder = chain.request().newBuilder()
 
@@ -14,5 +18,4 @@ class RevisionInterceptor(private val sessionManager: SessionManager): Intercept
         }
         return chain.proceed(requestBuilder.build())
     }
-
 }

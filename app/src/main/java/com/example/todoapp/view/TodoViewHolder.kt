@@ -5,20 +5,21 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
+import com.example.todoapp.common.Utils
+import com.example.todoapp.databinding.TodoItemBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
-import com.example.todoapp.common.Utils
-import kotlinx.android.synthetic.main.todo_item.view.*
 
-class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class TodoViewHolder(private val itemBinding: TodoItemBinding) :
+    RecyclerView.ViewHolder(itemBinding.root) {
     fun bind(
         todoItem: TodoItem,
         onItemClickListener: ((TodoItem) -> Unit)?,
         onCheckboxClickListener: ((TodoItem, Boolean) -> Unit)?
     ) {
-        itemView.apply {
+        itemBinding.apply {
             checkbox.isChecked = todoItem.done
-            tv_title_item.text = todoItem.text
+            tvTitleItem.text = todoItem.text
             if (todoItem.done) {
                 setTodoItemDone()
             } else {
@@ -52,36 +53,36 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private fun setTodoItemDone() {
         setTodoItemGreenCheckbox()
-        itemView.apply {
-            tv_title_item.setTextColor(
+        itemBinding.apply {
+            tvTitleItem.setTextColor(
                 ContextCompat.getColor(
-                    context,
+                    root.context,
                     R.color.label_tertiary
                 )
             )
-            tv_title_item.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-            iv_importance.visibility = View.GONE
+            tvTitleItem.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+            ivImportance.visibility = View.GONE
         }
     }
 
     private fun setTodoItemNotDone() {
-        itemView.apply {
-            tv_title_item.setTextColor(
+        itemBinding.apply {
+            tvTitleItem.setTextColor(
                 ContextCompat.getColor(
-                    context,
+                    root.context,
                     R.color.label_primary
                 )
             )
-            tv_title_item.paintFlags = 0
+            tvTitleItem.paintFlags = 0
         }
     }
 
     private fun setTodoItemHighImportance() {
-        itemView.apply {
-            iv_importance.visibility = View.VISIBLE
-            iv_importance.setImageDrawable(
+        itemBinding.apply {
+            ivImportance.visibility = View.VISIBLE
+            ivImportance.setImageDrawable(
                 ContextCompat.getDrawable(
-                    context,
+                    root.context,
                     R.drawable.ic_double_mark
                 )
             )
@@ -89,11 +90,11 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun setTodoItemLowImportance() {
-        itemView.apply {
-            iv_importance.visibility = View.VISIBLE
-            iv_importance.setImageDrawable(
+        itemBinding.apply {
+            ivImportance.visibility = View.VISIBLE
+            ivImportance.setImageDrawable(
                 ContextCompat.getDrawable(
-                    context,
+                    root.context,
                     R.drawable.ic_arrow_down
                 )
             )
@@ -101,32 +102,32 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     private fun setTodoItemBasicImportance() {
-        itemView.apply {
-            iv_importance.visibility = View.GONE
+        itemBinding.apply {
+            ivImportance.visibility = View.GONE
         }
     }
 
     private fun setTodoItemGreenCheckbox() {
-        itemView.apply {
+        itemBinding.apply {
             checkbox.isChecked = true
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(context, R.color.green)
+                ContextCompat.getColorStateList(root.context, R.color.green)
         }
     }
 
     private fun setTodoItemRedCheckbox() {
-        itemView.apply {
+        itemBinding.apply {
             checkbox.isChecked = false
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(context, R.color.red)
+                ContextCompat.getColorStateList(root.context, R.color.red)
         }
     }
 
     private fun setTodoItemGreyCheckbox() {
-        itemView.apply {
+        itemBinding.apply {
             checkbox.isChecked = false
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(context, R.color.label_tertiary)
+                ContextCompat.getColorStateList(root.context, R.color.label_tertiary)
         }
     }
 
@@ -134,14 +135,14 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         todoItem: TodoItem, onItemClickListener: ((TodoItem) -> Unit)?,
         onCheckboxClickListener: ((TodoItem, Boolean) -> Unit)?
     ) {
-        itemView.apply {
-            tv_title_item
+        itemBinding.apply {
+            tvTitleItem
                 .setOnClickListener {
                     onItemClickListener?.let {
                         it(todoItem)
                     }
                 }
-            iv_info.setOnClickListener {
+            ivInfo.setOnClickListener {
                 onItemClickListener?.let {
                     it(todoItem)
                 }
