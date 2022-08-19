@@ -11,7 +11,9 @@ import com.example.todoapp.R
 import com.example.todoapp.TodoApplication
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.di.TodoFragmentComponent
+import com.example.todoapp.view.FabAnimation
 import com.example.todoapp.view.ItemTouchHelperCallback
+import com.example.todoapp.view.getColorFromAttr
 import com.example.todoapp.view.viewmodels.TodoViewModel
 import com.example.todoapp.view.viewmodels.TodoViewModelFactory
 import javax.inject.Inject
@@ -64,7 +66,12 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 binding,
                 viewLifecycleOwner,
                 todoViewModel,
-                itemTouchHelperCallback
+                itemTouchHelperCallback,
+                FabAnimation(
+                    binding.fab,
+                    requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondary),
+                    requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondaryVariant)
+                )
             )
         todoViewController?.apply {
             setupViews()
@@ -76,6 +83,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
     override fun onDestroyView() {
         super.onDestroyView()
         todoViewController?.unregisterNetworkCallback()
+        todoViewController?.endAnimation()
         todoViewController = null
         itemTouchHelperCallback = null
         _binding = null

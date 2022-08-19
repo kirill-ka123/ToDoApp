@@ -36,7 +36,7 @@ class TodoApplication : Application() {
         val workManager = WorkManager.getInstance(applicationContext)
         workManager.enqueueUniquePeriodicWork(
             WORK_NAME,
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.KEEP,
             networkRequest
         )
     }

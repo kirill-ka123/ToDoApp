@@ -3,6 +3,6 @@
 
     <style name="Calendar.Blue" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="colorPrimary">@color/blue</item>
-        <item name="colorOnPrimary">@color/dark_2</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 </resources>

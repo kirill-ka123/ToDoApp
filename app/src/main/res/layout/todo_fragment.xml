@@ -113,7 +113,7 @@
             app:fabSize="normal"
             app:layout_anchor="@id/nestedScrollView"
             app:layout_anchorGravity="bottom|end"
-            app:tint="?attr/colorOnPrimary" />
+            app:tint="?attr/colorOnSecondary" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>
