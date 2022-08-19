@@ -3,20 +3,36 @@
 
     <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/ivory</item>
+        <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/green</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/back_primary</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/ivory</item>
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/back_primary</item>
+        <item name="android:navigationBarColor">@color/ivory</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="l">true</item>
+        <!-- Text colors. -->
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/black_60_transparency</item>
+        <item name="android:textColorTertiary">@color/black_30_transparency</item>
+        <item name="android:textColorPrimaryDisableOnly">@color/black_15_transparency</item>
+        <!-- Background colors. -->
+        <item name="android:colorBackground">@color/ivory</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <!-- Divider colors. -->
+        <item name="dividerHorizontal">@color/black_20_transparency</item>
+        <!-- Control colors. -->
+        <item name="colorControlNormal">@color/black_20_transparency</item>
+        <item name="colorControlActivated">@color/green</item>
+        <item name="colorError">@color/red</item>
+        <item name="colorAccent">@color/blue</item>
     </style>
 </resources>

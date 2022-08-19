@@ -4,14 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_primary">
+    android:background="?android:attr/colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/back_primary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -37,7 +36,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_close"
-                    app:tint="@color/label_primary" />
+                    app:tint="?android:attr/textColorPrimary" />
 
                 <Space
                     android:layout_width="0dp"
@@ -51,7 +50,8 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="16dp"
                     android:text="@string/save"
-                    android:textAppearance="@style/save" />
+                    android:textAppearance="@style/TextAppearance.Button"
+                    android:textColor="?attr/colorAccent" />
             </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -66,7 +66,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/back_primary"
+            android:background="?android:attr/colorBackground"
             android:orientation="vertical">
 
             <EditText
@@ -96,7 +96,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:background="@color/support_separator" />
+                android:background="?attr/dividerHorizontal" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchDeadline"
@@ -106,23 +106,24 @@
                 android:layout_marginTop="26dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/make_up_to"
-                android:textAppearance="@style/make_up_to"
-                android:textColor="@color/label_primary"
-                android:theme="@style/colored_switch" />
+                android:textAppearance="@style/TextAppearance.Body"
+                android:textColor="?android:attr/textColorPrimary"
+                android:theme="@style/Switch.Blue" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:textAppearance="@style/date"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:textAppearance="@style/TextAppearance.Subhead"
+                android:textColor="?attr/colorSecondary" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="40dp"
-                android:background="@color/support_separator" />
+                android:background="?attr/dividerHorizontal" />
 
             <LinearLayout
                 android:id="@+id/delete"
@@ -138,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
                     android:src="@drawable/ic_delete"
-                    app:tint="@color/label_disable" />
+                    app:tint="?android:attr/textColorPrimaryDisableOnly" />
 
                 <TextView
                     android:id="@+id/tvDelete"
@@ -146,20 +147,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="17dp"
                     android:text="@string/delete"
-                    android:textAppearance="@style/delete" />
+                    android:textAppearance="@style/TextAppearance.Body"
+                    android:textColor="?android:attr/textColorPrimaryDisableOnly" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <ProgressBar
-        android:id="@+id/loadingProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:background="@android:color/transparent"
-        android:visibility="invisible"
-        app:layout_anchor="@id/nestedScrollView"
-        app:layout_anchorGravity="center|bottom" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
