@@ -12,12 +12,10 @@ class FabAnimation(
     private val startColor: Int,
     private val endColor: Int
 ) {
-    private var animatorSet: AnimatorSet? = null
+    private var fabAnimation: AnimatorSet? = null
     private val objectAnimators = mutableListOf<ObjectAnimator>()
 
     init {
-        objectAnimators.clear()
-
         objectAnimators.add(ObjectAnimator.ofFloat(fab, View.ROTATION, -10f, 10f).apply {
             duration = 1500
             repeatCount = ValueAnimator.INFINITE
@@ -49,17 +47,17 @@ class FabAnimation(
     }
 
     fun startAnimation() {
-        animatorSet = AnimatorSet()
-        animatorSet?.playTogether(objectAnimators.toList())
-        animatorSet?.interpolator = AccelerateDecelerateInterpolator()
-        animatorSet?.start()
+        fabAnimation = AnimatorSet()
+        fabAnimation?.playTogether(objectAnimators.toList())
+        fabAnimation?.interpolator = AccelerateDecelerateInterpolator()
+        fabAnimation?.start()
     }
 
     fun endAnimation() {
-        animatorSet?.removeAllListeners()
-        animatorSet?.end()
-        animatorSet?.cancel()
-        animatorSet = null
+        fabAnimation?.removeAllListeners()
+        fabAnimation?.end()
+        fabAnimation?.cancel()
+        fabAnimation = null
         fab.rotation = 0f
         fab.scaleX = 1f
         fab.scaleY = 1f

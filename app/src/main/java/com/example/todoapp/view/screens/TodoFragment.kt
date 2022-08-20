@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoapp.R
 import com.example.todoapp.TodoApplication
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.di.TodoFragmentComponent
+import com.example.todoapp.view.CustomSnackbar
 import com.example.todoapp.view.FabAnimation
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.getColorFromAttr
@@ -58,7 +60,18 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        itemTouchHelperCallback = itemTouchHelperCallbackFactory.create(todoViewModel, view)
+        itemTouchHelperCallback = itemTouchHelperCallbackFactory.create(
+            todoViewModel,
+            view,
+            CustomSnackbar(
+                layoutInflater.inflate(
+                    R.layout.custom_snackbar,
+                    LinearLayout(requireContext()),
+                    false
+                ),
+                5000
+            )
+        )
         todoViewController =
             todoViewControllerFactory.create(
                 this,

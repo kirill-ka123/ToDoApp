@@ -6,20 +6,26 @@
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/background.xml" value="0.116" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/checkbox_background.xml" value="0.168" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/checkbox_selector.xml" value="0.1135" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/circular_progress_bar.xml" value="0.121" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/circular_shape.xml" value="0.121" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/custom_edittext.xml" value="0.196" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_add.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_close.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_delete.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_info.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.121" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_visibility.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/ic_visibility_off.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/pressed_checkbox.xml" value="0.1135" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/red_checkbox.xml" value="0.1135" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/case_fragment.xml" value="0.264" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/circular_progress_bar.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/colored_spinner_layout.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/colored_spinner_lyout.xml" value="0.2682291666666667" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/item_custom_snackbar.xml" value="0.1" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/item_of_tasks.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/layout_custom_snackbar.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/sdf.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/spinner_dropdown_layout.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/spinner_layout.xml" value="0.1" />

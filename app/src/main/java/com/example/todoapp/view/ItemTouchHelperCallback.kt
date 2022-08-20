@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.view.viewmodels.TodoViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -16,6 +15,7 @@ import dagger.assisted.AssistedInject
 class ItemTouchHelperCallback @AssistedInject constructor(
     @Assisted("TodoViewModel") private val todoViewModel: TodoViewModel,
     @Assisted("view") private val view: View,
+    @Assisted("customSnackbar") private val customSnackbar: CustomSnackbar,
     private val todoAdapter: TodoAdapter
 ) : ItemTouchHelper.SimpleCallback(
     0,
@@ -26,6 +26,7 @@ class ItemTouchHelperCallback @AssistedInject constructor(
         fun create(
             @Assisted("TodoViewModel") todoViewModel: TodoViewModel,
             @Assisted("view") view: View,
+            @Assisted("customSnackbar") customSnackbar: CustomSnackbar
         ): ItemTouchHelperCallback
     }
 
@@ -50,15 +51,9 @@ class ItemTouchHelperCallback @AssistedInject constructor(
             }
             false -> {
                 todoViewModel.deleteTodoItem(todoItem)
-                Snackbar.make(
-                    view,
-                    view.resources.getString(R.string.case_was_deleted),
-                    Snackbar.LENGTH_LONG
-                ).apply {
-                    setAction(view.resources.getString(R.string.cancel)) {
-                        todoViewModel.addTodoItem(todoItem)
-                    }
-                    show()
+
+                customSnackbar.makeAndShow(view) {
+                    todoViewModel.addTodoItem(todoItem)
                 }
             }
         }
