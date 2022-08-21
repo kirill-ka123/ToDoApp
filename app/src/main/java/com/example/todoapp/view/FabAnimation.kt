@@ -17,19 +17,19 @@ class FabAnimation(
 
     init {
         objectAnimators.add(ObjectAnimator.ofFloat(fab, View.ROTATION, -10f, 10f).apply {
-            duration = 1500
+            duration = FAB_ANIMATION_DURATION
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.REVERSE
         })
 
         objectAnimators.add(ObjectAnimator.ofFloat(fab, View.SCALE_X, 1f, 1.15f).apply {
-            duration = 750
+            duration = FAB_ANIMATION_DURATION / 2
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.REVERSE
         })
 
         objectAnimators.add(ObjectAnimator.ofFloat(fab, View.SCALE_Y, 1f, 1.15f).apply {
-            duration = 750
+            duration = FAB_ANIMATION_DURATION / 2
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.REVERSE
         })
@@ -40,7 +40,7 @@ class FabAnimation(
             startColor,
             endColor
         ).apply {
-            duration = 750
+            duration = FAB_ANIMATION_DURATION / 2
             repeatCount = ValueAnimator.INFINITE
             repeatMode = ValueAnimator.REVERSE
         })
@@ -62,5 +62,9 @@ class FabAnimation(
         fab.scaleX = 1f
         fab.scaleY = 1f
         fab.contentBackground?.setTint(startColor)
+    }
+
+    companion object {
+        const val FAB_ANIMATION_DURATION = 1500L
     }
 }

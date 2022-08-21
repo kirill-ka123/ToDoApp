@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.ToDoApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/ivory</item>
+        <item name="colorPrimary">@color/ivory_1</item>
         <item name="colorPrimaryVariant">@color/white</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -10,21 +10,22 @@
         <item name="colorSecondaryVariant">@color/blue_dark</item>
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">@color/ivory</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/ivory_1</item>
         <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:navigationBarColor">@color/ivory</item>
+        <item name="android:navigationBarColor">@color/ivory_1</item>
         <!-- Text colors. -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">@color/black_60_transparency</item>
         <item name="android:textColorTertiary">@color/black_30_transparency</item>
         <item name="android:textColorPrimaryDisableOnly">@color/black_15_transparency</item>
         <!-- Background colors. -->
-        <item name="android:colorBackground">@color/ivory</item>
+        <item name="android:colorBackground">@color/ivory_1</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorSurfaceVariant">@color/white</item>
+        <item name="snackbarBackgroundColor">@color/dark_4</item>
         <!-- Divider colors. -->
         <item name="dividerHorizontal">@color/black_20_transparency</item>
         <!-- Control colors. -->

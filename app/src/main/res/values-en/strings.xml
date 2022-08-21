@@ -10,7 +10,7 @@
     <string name="save">SAVE</string>
     <string name="cancel">Cancel</string>
     <string name="toast_empty_text">The field \"What to do…\" cannot be empty</string>
-    <string name="case_was_deleted">The case was successfully deleted</string>
+    <string name="case_was_deleted">Case deleted</string>
     <string name="no">No</string>
     <string name="low">Low</string>
     <string name="important">Important</string>

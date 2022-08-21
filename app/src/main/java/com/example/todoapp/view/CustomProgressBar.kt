@@ -4,15 +4,13 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.os.SystemClock
 
-class CustomProgressBar() : Drawable() {
+class CustomProgressBar : Drawable() {
 
     private val paint = Paint()
 
-    private val centerX = 68f
-    private val centerY = 67f
-    private val circle = RectF(centerX - 40f, centerY - 40f, centerX + 40f, centerY + 40f)
+    private var circle = RectF(40f, 40f, 80f, 80f)
 
-    private val duration = 5000L
+    private val duration = PROGRESS_BAR_ANIMATION_DURATION
     private var previousDrawTime = 0L
     private val degreeDelta = duration.toFloat() / 360f
 
@@ -60,5 +58,13 @@ class CustomProgressBar() : Drawable() {
 
     fun setColor(color: Int) {
         paint.color = color
+    }
+
+    fun setSize(size: Float, margin: Float) {
+        circle = RectF(margin, margin, margin + size / 2, margin + size / 2)
+    }
+
+    companion object {
+        const val PROGRESS_BAR_ANIMATION_DURATION = 5000L
     }
 }

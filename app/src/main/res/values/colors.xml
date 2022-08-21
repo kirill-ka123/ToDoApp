@@ -29,8 +29,9 @@
     <color name="gray">#8E8E93</color>
     <color name="gray_light">#D1D1D6</color>
     <color name="gray_dark">#48484A</color>
-    <color name="ivory">#F7F6F2</color>
+    <color name="ivory_1">#F7F6F2</color>
     <color name="dark_1">#161618</color>
     <color name="dark_2">#252528</color>
     <color name="dark_3">#3C3C3F</color>
+    <color name="dark_4">#CC263238</color>
 </resources>

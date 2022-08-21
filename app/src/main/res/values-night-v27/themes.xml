@@ -27,6 +27,7 @@
         <item name="android:colorBackground">@color/dark_1</item>
         <item name="colorSurface">@color/dark_2</item>
         <item name="colorSurfaceVariant">@color/dark_3</item>
+        <item name="snackbarBackgroundColor">@color/dark_4</item>
         <!-- Divider colors. -->
         <item name="dividerHorizontal">@color/white_20_transparency</item>
         <!-- Control colors. -->

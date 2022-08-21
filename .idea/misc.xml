@@ -25,6 +25,7 @@
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/one_anim.xml" value="0.144" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/pressed_checkbox.xml" value="0.1135" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/red_checkbox.xml" value="0.1135" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/drawable/snackbar_background.xml" value="0.156" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/case_fragment.xml" value="0.264" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/circular_progress_bar.xml" value="0.25416666666666665" />
@@ -37,10 +38,10 @@
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/layout_snackbar.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/sdf.xml" value="0.2682291666666667" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/spinner_dropdown_layout.xml" value="0.2682291666666667" />
-        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/spinner_layout.xml" value="0.1" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/spinner_layout.xml" value="0.4" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/todo_fragment.xml" value="0.34234234234234234" />
         <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/todo_item.xml" value="0.536" />
-        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/view_snackbar.xml" value="0.2462962962962963" />
+        <entry key="..\:/Users/Kirill2/Desktop/kirill/self-development/android/ToDoApp/app/src/main/res/layout/view_snackbar.xml" value="0.4" />
       </map>
     </option>
   </component>

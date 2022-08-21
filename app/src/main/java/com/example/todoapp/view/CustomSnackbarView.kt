@@ -28,7 +28,11 @@ class CustomSnackbarView @JvmOverloads constructor(
         val animatedProgressBar = animatedProgressBar.background as CustomProgressBar
         animatedNumbers.reset()
         animatedNumbers.start()
-        animatedProgressBar.setColor(context.getColorFromAttr(android.R.attr.textColorTertiary))
+        animatedProgressBar.setColor(context.getColorFromAttr(com.google.android.material.R.attr.colorOnSecondary))
+        animatedProgressBar.setSize(
+            context.convertDpToPixels(60f),
+            context.convertDpToPixels(10f)
+        )
         animatedProgressBar.start()
     }
 

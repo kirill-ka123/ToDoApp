@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@drawable/background"
+    android:background="@drawable/snackbar_background"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -17,10 +17,11 @@
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:gravity="center"
         android:text="@string/case_was_deleted"
         android:textAppearance="@style/TextAppearance.Body"
-        android:textColor="?android:attr/textColorSecondary" />
+        android:textColor="?attr/colorOnSecondary" />
 
     <Space
         android:layout_width="0dp"
@@ -31,7 +32,8 @@
         android:id="@+id/tvCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="5dp"
+        android:padding="15dp"
         android:gravity="center"
         android:text="@string/cancel"
         android:textAppearance="@style/TextAppearance.Button"
