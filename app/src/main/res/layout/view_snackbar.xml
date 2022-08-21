@@ -1,42 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@drawable/background"
     android:gravity="center"
     android:orientation="horizontal">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:max="100"
-            app:indicatorColor="?android:attr/textColorSecondary"
-            app:indicatorSize="30dp"
-            app:trackThickness="3dp" />
-
-        <TextView
-            android:id="@+id/progressText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textAppearance="@style/TextAppearance.Subhead"
-            android:textColor="?android:attr/textColorSecondary" />
-
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/animatedProgressBar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/anim_progressbar"
+        android:src="@drawable/avd_anim_numbers" />
 
     <TextView
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:gravity="center"
         android:text="@string/case_was_deleted"
         android:textAppearance="@style/TextAppearance.Body"

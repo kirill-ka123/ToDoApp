@@ -6,10 +6,10 @@ import com.example.todoapp.models.TodoItem
 
 @Dao
 interface TodoItemsDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTodoItem(todoItem: TodoItem)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAllTodoItems(todoItems: List<TodoItem>)
 
     @Update

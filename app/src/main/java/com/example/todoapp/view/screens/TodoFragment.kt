@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.todoapp.R
 import com.example.todoapp.TodoApplication
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.di.TodoFragmentComponent
-import com.example.todoapp.view.CustomSnackbar
 import com.example.todoapp.view.FabAnimation
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.getColorFromAttr
@@ -41,6 +39,8 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
     private val binding
         get() = _binding!!
 
+    private var fabAnimation: FabAnimation? = null
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         todoFragmentComponent =
@@ -55,6 +55,11 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         savedInstanceState: Bundle?
     ): View? {
         _binding = TodoFragmentBinding.inflate(inflater, container, false)
+        fabAnimation = FabAnimation(
+            binding.fab,
+            requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondary),
+            requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondaryVariant)
+        )
         return binding.root
     }
 
@@ -62,15 +67,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
         super.onViewCreated(view, savedInstanceState)
         itemTouchHelperCallback = itemTouchHelperCallbackFactory.create(
             todoViewModel,
-            view,
-            CustomSnackbar(
-                layoutInflater.inflate(
-                    R.layout.custom_snackbar,
-                    LinearLayout(requireContext()),
-                    false
-                ),
-                5000
-            )
+            view
         )
         todoViewController =
             todoViewControllerFactory.create(
@@ -80,11 +77,7 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 viewLifecycleOwner,
                 todoViewModel,
                 itemTouchHelperCallback,
-                FabAnimation(
-                    binding.fab,
-                    requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondary),
-                    requireContext().getColorFromAttr(com.google.android.material.R.attr.colorSecondaryVariant)
-                )
+                fabAnimation
             )
         todoViewController?.apply {
             setupViews()
@@ -95,8 +88,9 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        fabAnimation?.endAnimation()
+        fabAnimation = null
         todoViewController?.unregisterNetworkCallback()
-        todoViewController?.endAnimation()
         todoViewController = null
         itemTouchHelperCallback = null
         _binding = null
