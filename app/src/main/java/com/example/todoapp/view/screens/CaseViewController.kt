@@ -170,7 +170,7 @@ class CaseViewController @AssistedInject constructor(
     }
 
     private fun createNewTodoItem(importance: Importance) = TodoItem(
-        0,
+        "0",
         binding.etCase.text.toString(),
         importance,
         deadline,

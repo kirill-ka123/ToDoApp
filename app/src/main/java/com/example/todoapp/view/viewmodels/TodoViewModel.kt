@@ -21,7 +21,9 @@ class TodoViewModel(
     private val _stateNetwork: MutableLiveData<StateNetwork> = MutableLiveData()
     val stateNetwork: LiveData<StateNetwork> = _stateNetwork
 
-    fun getTodoItemsLiveData() = todoItemsRepository.getTodoItemsLivaData()
+    fun getTodoItemsLiveData(): LiveData<List<TodoItem>> {
+        return todoItemsRepository.getTodoItemsLivaData()
+    }
 
     fun getTodoItemsNetwork() =
         viewModelScope.launch {
@@ -53,4 +55,14 @@ class TodoViewModel(
             _stateNetwork.postValue(StateNetwork.LOST)
         }
     }
+
+    fun sortTodoItems(todoItems: List<TodoItem>) =
+        todoItems.sortedBy { todoItem ->
+            try {
+                todoItem.id.toInt()
+            } catch (e: Exception) {
+                0
+            }
+        }
 }
+

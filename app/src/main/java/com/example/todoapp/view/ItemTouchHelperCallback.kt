@@ -53,7 +53,10 @@ class ItemTouchHelperCallback @AssistedInject constructor(
             false -> {
                 todoViewModel.deleteTodoItem(todoItem)
 
-                CustomSnackbar.make(view.findViewById(R.id.coordinator)).apply {
+                val viewForSnackbar = view.findViewById<View>(R.id.coordinator)
+                val parent = viewForSnackbar.findSuitableParent() ?: return
+
+                CustomSnackbar.make(viewForSnackbar, parent).apply {
                     animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
                     duration = 4700
                     setAction {
