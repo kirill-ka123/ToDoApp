@@ -24,10 +24,7 @@ class CustomSnackbar(
     }
 
     companion object {
-        fun make(view: View): CustomSnackbar {
-            val parent = view.findSuitableParent() ?: throw IllegalArgumentException(
-                "No suitable parent found from the given view. Please provide a valid view."
-            )
+        fun make(view: View, parent: ViewGroup): CustomSnackbar {
             val customView = LayoutInflater.from(view.context).inflate(
                 R.layout.layout_snackbar,
                 parent,

@@ -53,4 +53,13 @@ class TodoViewModel(
             _stateNetwork.postValue(StateNetwork.LOST)
         }
     }
+
+    fun sortTodoItems(todoItems: List<TodoItem>) =
+        todoItems.sortedBy { todoItem ->
+            try {
+                todoItem.id.toInt()
+            } catch (e: Exception) {
+                0
+            }
+        }
 }

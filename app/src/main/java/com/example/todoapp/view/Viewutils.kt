@@ -1,9 +1,26 @@
 package com.example.todoapp.view
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+
+fun Context.convertDpToPixels(dp: Float) =
+    dp * this.resources.displayMetrics.density
+
+@ColorInt
+fun Context.getColorFromAttr(
+    @AttrRes attrColor: Int,
+    typedValue: TypedValue = TypedValue(),
+    resolveRefs: Boolean = true
+): Int {
+    theme.resolveAttribute(attrColor, typedValue, resolveRefs)
+    return typedValue.data
+}
 
 internal fun View?.findSuitableParent(): ViewGroup? {
     var view = this

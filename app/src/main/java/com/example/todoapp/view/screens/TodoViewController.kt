@@ -121,22 +121,23 @@ class TodoViewController @AssistedInject constructor(
 
     fun setupTodoItemsObserver() {
         viewModel.getTodoItemsLiveData().observe(lifecycleOwner) { todoItems ->
-            viewModel.todoItems = todoItems
+            val sortedTodoItems = viewModel.sortTodoItems(todoItems)
+            viewModel.todoItems = sortedTodoItems
 
-            if (todoItems.isEmpty()) {
+            if (sortedTodoItems.isEmpty()) {
                 fabAnimation?.startAnimation()
             } else fabAnimation?.endAnimation()
 
             binding.completeTitle.text =
                 fragment.getString(
                     R.string.number_of_completed,
-                    getNumberOfCompleted(todoItems)
+                    getNumberOfCompleted(sortedTodoItems)
                 )
 
             if (viewModel.stateVisibility == StateVisibility.VISIBLE) {
-                adapter.differ.submitList(todoItems)
+                adapter.differ.submitList(sortedTodoItems)
             } else {
-                adapter.differ.submitList(getNotCompletedTodoItems(todoItems))
+                adapter.differ.submitList(getNotCompletedTodoItems(sortedTodoItems))
             }
         }
     }
@@ -159,7 +160,6 @@ class TodoViewController @AssistedInject constructor(
             when (stateNetwork) {
                 StateNetwork.AVAILABLE -> binding.internetTitle.visibility = View.GONE
                 StateNetwork.LOST -> binding.internetTitle.visibility = View.VISIBLE
-                else -> throw IllegalArgumentException()
             }
         }
     }
