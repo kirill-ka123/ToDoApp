@@ -2,33 +2,39 @@ package com.example.todoapp.data.repository
 
 import android.util.Log
 import com.example.todoapp.data.SessionManager
-import com.example.todoapp.data.db.TodoItemsDatabase
+import com.example.todoapp.data.db.TodoItemsDao
 import com.example.todoapp.data.network.CheckInternet
 import com.example.todoapp.data.network.PrepareRequests
 import com.example.todoapp.data.network.TodoApi
 import com.example.todoapp.data.network.models.GetItemsResponse
 import com.example.todoapp.data.network.models.SetItemsRequest
 import com.example.todoapp.data.network.models.UpdateItemResponse
-import com.example.todoapp.di.scopes.AppScope
 import com.example.todoapp.models.TodoItem
+import dagger.Reusable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@AppScope
+@Reusable
 class TodoItemsRepository @Inject constructor(
-    private val database: TodoItemsDatabase,
+    private val databaseDao: TodoItemsDao,
     private val todoApi: TodoApi,
     private val sessionManager: SessionManager,
     private val prepareRequests: PrepareRequests,
     private val checkInternet: CheckInternet
 ) {
-    fun getTodoItemsLivaData() = database.getTodoItemsDao().getAllTodoItemsLive()
+    fun getTodoItemsLivaData() = databaseDao.getAllTodoItemsLive()
 
     private suspend fun getTodoItems() = withContext(Dispatchers.IO) {
-        database.getTodoItemsDao().getAllTodoItems()
+        databaseDao.getAllTodoItems().sortedBy { todoItem ->
+            try {
+                todoItem.id.toInt()
+            } catch (e: Exception) {
+                0
+            }
+        }
     }
 
     private suspend fun retrofitCall(call: suspend () -> (UpdateItemResponse)) {
@@ -61,10 +67,10 @@ class TodoItemsRepository @Inject constructor(
 
     private suspend fun synchronizationDatabase(todoItems: List<TodoItem>) {
         if (getTodoItems().isNotEmpty()) {
-            database.getTodoItemsDao().deleteAllTodoItems()
+            databaseDao.deleteAllTodoItems()
         }
         val newList = mergeData(getTodoItems(), todoItems)
-        database.getTodoItemsDao().addAllTodoItems(newList)
+        databaseDao.addAllTodoItems(newList)
         sessionManager.saveRevisionDatabase(sessionManager.fetchRevisionNetwork())
     }
 
@@ -77,7 +83,11 @@ class TodoItemsRepository @Inject constructor(
         val newList = mutableListOf<TodoItem>()
         listFromNetwork.forEach { todoItemFromNetwork ->
             val todoItem = listFromDatabase.find { todoItemFromDatabase ->
-                todoItemFromNetwork.id == todoItemFromDatabase.id
+                try {
+                    todoItemFromNetwork.id.toInt() == todoItemFromDatabase.id.toInt()
+                } catch (e: Exception) {
+                    todoItemFromNetwork.id == todoItemFromDatabase.id
+                }
             }
             if (todoItem == null) {
                 newList.add(todoItemFromNetwork)
@@ -109,20 +119,17 @@ class TodoItemsRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    private fun getListAfterGetRequest(body: GetItemsResponse): List<TodoItem> {
-        return body.todoItemsNetwork.map { it.mapToTodoItem() }.sortedBy { todoItem ->
-            todoItem.id
-        }
-    }
+    private fun getListAfterGetRequest(body: GetItemsResponse) =
+        body.todoItemsNetwork.map { it.mapToTodoItem() }
 
-    suspend fun addTodoItem(todoItem: TodoItem, id: Int?) = withContext(Dispatchers.IO) {
+    suspend fun addTodoItem(todoItem: TodoItem, id: String?) = withContext(Dispatchers.IO) {
         val newTodoItem = prepareRequests.prepareAddTodoItemRequest(todoItem, id, getTodoItems())
         addTodoItemDatabase(newTodoItem)
         postTodoItemNetwork(newTodoItem)
     }
 
     private suspend fun addTodoItemDatabase(todoItem: TodoItem) {
-        database.getTodoItemsDao().addTodoItem(todoItem)
+        databaseDao.addTodoItem(todoItem)
         sessionManager.saveRevisionDatabase(sessionManager.fetchRevisionDatabase() + 1)
     }
 
@@ -137,22 +144,22 @@ class TodoItemsRepository @Inject constructor(
     }
 
     private suspend fun editTodoItemDatabase(todoItem: TodoItem) {
-        database.getTodoItemsDao().editTodoItem(todoItem)
+        databaseDao.editTodoItem(todoItem)
         sessionManager.saveRevisionDatabase(sessionManager.fetchRevisionDatabase() + 1)
     }
 
     private suspend fun putTodoItemNetwork(todoItem: TodoItem) {
         val updateItemRequest = prepareRequests.preparePutRequest(todoItem)
-        retrofitCall { todoApi.putTodoItem(todoItem.id.toString(), updateItemRequest) }
+        retrofitCall { todoApi.putTodoItem(todoItem.id, updateItemRequest) }
     }
 
     suspend fun deleteTodoItem(todoItem: TodoItem) = withContext(Dispatchers.IO) {
         deleteTodoItemDatabase(todoItem)
-        deleteTodoItemNetwork(todoItem.id.toString())
+        deleteTodoItemNetwork(todoItem.id)
     }
 
     private suspend fun deleteTodoItemDatabase(todoItem: TodoItem) {
-        database.getTodoItemsDao().deleteTodoItem(todoItem)
+        databaseDao.deleteTodoItem(todoItem)
         sessionManager.saveRevisionDatabase(sessionManager.fetchRevisionDatabase() + 1)
     }
 
