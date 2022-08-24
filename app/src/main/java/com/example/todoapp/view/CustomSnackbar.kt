@@ -24,7 +24,8 @@ class CustomSnackbar(
     }
 
     companion object {
-        fun make(view: View, parent: ViewGroup): CustomSnackbar {
+        fun make(view: View): CustomSnackbar {
+            val parent = view as ViewGroup
             val customView = LayoutInflater.from(view.context).inflate(
                 R.layout.layout_snackbar,
                 parent,

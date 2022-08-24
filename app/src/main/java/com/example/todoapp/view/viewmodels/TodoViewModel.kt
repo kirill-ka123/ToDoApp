@@ -58,11 +58,7 @@ class TodoViewModel(
 
     fun sortTodoItems(todoItems: List<TodoItem>) =
         todoItems.sortedBy { todoItem ->
-            try {
-                todoItem.id.toInt()
-            } catch (e: Exception) {
-                0
-            }
+            todoItem.createdAt
         }
 }
 

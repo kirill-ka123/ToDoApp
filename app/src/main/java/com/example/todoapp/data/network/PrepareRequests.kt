@@ -10,19 +10,12 @@ import javax.inject.Inject
 
 @AppScope
 class PrepareRequests @Inject constructor() {
-    private fun generateId(todoItems: List<TodoItem>): Int {
-        return if (todoItems.isNotEmpty()) {
-            todoItems.last().id.toInt() + 1
-        } else 0
-    }
-
     fun prepareAddTodoItemRequest(
         todoItem: TodoItem,
-        id: String?,
-        todoItems: List<TodoItem>
+        id: String?
     ): TodoItem {
         return if (id == null) {
-            val newId = generateId(todoItems)
+            val newId = System.currentTimeMillis()
             todoItem.copy(id = newId.toString())
         } else todoItem
     }
