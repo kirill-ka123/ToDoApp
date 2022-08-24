@@ -29,11 +29,7 @@ class TodoItemsRepository @Inject constructor(
 
     private suspend fun getTodoItems() = withContext(Dispatchers.IO) {
         databaseDao.getAllTodoItems().sortedBy { todoItem ->
-            try {
-                todoItem.id.toInt()
-            } catch (e: Exception) {
-                0
-            }
+            todoItem.createdAt
         }
     }
 
@@ -83,15 +79,11 @@ class TodoItemsRepository @Inject constructor(
         val newList = mutableListOf<TodoItem>()
         listFromNetwork.forEach { todoItemFromNetwork ->
             val todoItem = listFromDatabase.find { todoItemFromDatabase ->
-                try {
-                    todoItemFromNetwork.id.toInt() == todoItemFromDatabase.id.toInt()
-                } catch (e: Exception) {
                     todoItemFromNetwork.id == todoItemFromDatabase.id
-                }
             }
             if (todoItem == null) {
                 newList.add(todoItemFromNetwork)
-            } else if (todoItem.changedAt?.toInt() ?: 0 > todoItemFromNetwork.changedAt?.toInt() ?: 0) {
+            } else if (todoItem.changedAt ?: 0 > todoItemFromNetwork.changedAt ?: 0) {
                 newList.add(todoItem)
             } else newList.add(todoItemFromNetwork)
         }
@@ -123,7 +115,7 @@ class TodoItemsRepository @Inject constructor(
         body.todoItemsNetwork.map { it.mapToTodoItem() }
 
     suspend fun addTodoItem(todoItem: TodoItem, id: String?) = withContext(Dispatchers.IO) {
-        val newTodoItem = prepareRequests.prepareAddTodoItemRequest(todoItem, id, getTodoItems())
+        val newTodoItem = prepareRequests.prepareAddTodoItemRequest(todoItem, id)
         addTodoItemDatabase(newTodoItem)
         postTodoItemNetwork(newTodoItem)
     }
