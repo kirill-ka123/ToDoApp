@@ -1,6 +1,6 @@
 package com.example.todoapp.common
 
-import com.example.todoapp.models.Importance
+import com.example.todoapp.data.db.models.Importance
 import java.text.DateFormat
 import java.util.*
 

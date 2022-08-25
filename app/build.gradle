@@ -49,6 +49,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0-alpha07'
     testImplementation 'org.mockito:mockito-core:4.7.0'
     testImplementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    testImplementation 'org.mockito:mockito-inline:2.13.0'
+    //testImplementation 'org.squareup.okhhtp3:mockWebServer:4.10.0'
 
     // ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'

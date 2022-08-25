@@ -1,7 +1,7 @@
 package com.example.todoapp.di
 
 import com.example.todoapp.di.scopes.TodoFragmentScope
-import com.example.todoapp.view.screens.TodoFragment
+import com.example.todoapp.presentation.view.screens.TodoFragment
 import dagger.Subcomponent
 
 @Subcomponent(modules = [TodoFragmentModule::class])
