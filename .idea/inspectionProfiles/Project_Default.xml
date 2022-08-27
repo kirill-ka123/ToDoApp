@@ -2,7 +2,7 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="IllegalIdentifier" enabled="true" level="ERROR" enabled_by_default="true">
-      <scope name="Tests" level="ERROR" enabled="false" />
+      <scope name="Tests" level="ERROR" enabled="true" />
     </inspection_tool>
   </profile>
 </component>

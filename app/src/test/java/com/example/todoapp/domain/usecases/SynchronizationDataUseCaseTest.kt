@@ -23,14 +23,15 @@ class SynchronizationDataUseCaseTest {
     fun setUp() {
         testTodoItems = mutableListOf()
         ('a'..'z').forEachIndexed { index, c ->
+            val createdAt = (1L..100L).random()
             testTodoItems.add(
                 TodoItem(
                     id = index.toString(),
                     text = c.toString(),
                     importance = Importance.IMPORTANT,
                     done = index % 2 == 1,
-                    createdAt = index.toLong(),
-                    changedAt = (index + 1).toLong()
+                    createdAt = createdAt,
+                    changedAt = createdAt + 1
                 )
             )
         }

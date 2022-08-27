@@ -2,6 +2,7 @@ package com.example.todoapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.todoapp.data.SessionManager
 import com.example.todoapp.data.db.TodoItemsDao
 import com.example.todoapp.data.db.TodoItemsDatabase
 import com.example.todoapp.di.scopes.AppScope
@@ -24,6 +25,12 @@ class DatabaseModule {
     @AppScope
     fun provideTodoItemsDao(database: TodoItemsDatabase): TodoItemsDao {
         return database.getTodoItemsDao()
+    }
+
+    @Provides
+    @AppScope
+    fun provideSessionManager(appContext: Context): SessionManager {
+        return SessionManager(appContext)
     }
 
     companion object {

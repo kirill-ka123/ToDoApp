@@ -12,7 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-class NetworkModule {
+class FakeNetworkModule {
     @Provides
     @AppScope
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
@@ -50,6 +50,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "https://beta.mrdekk.ru/todobackend/"
+        const val BASE_URL = "http://localhost:8080/"
     }
 }
