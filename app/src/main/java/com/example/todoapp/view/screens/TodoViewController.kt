@@ -14,6 +14,7 @@ import com.example.todoapp.data.network.CheckInternet
 import com.example.todoapp.data.network.models.StateNetwork
 import com.example.todoapp.databinding.TodoFragmentBinding
 import com.example.todoapp.models.TodoItem
+import com.example.todoapp.view.FabAnimation
 import com.example.todoapp.view.ItemTouchHelperCallback
 import com.example.todoapp.view.TodoAdapter
 import com.example.todoapp.view.viewmodels.TodoViewModel
@@ -28,6 +29,7 @@ class TodoViewController @AssistedInject constructor(
     @Assisted("TodoLifecycleOwner") private val lifecycleOwner: LifecycleOwner,
     @Assisted("TodoViewModel") private val viewModel: TodoViewModel,
     @Assisted("itemTouchHelper") private val itemTouchHelperCallback: ItemTouchHelperCallback?,
+    @Assisted("fabAnimation") private val fabAnimation: FabAnimation?,
     private val adapter: TodoAdapter,
     private val connectivityManager: ConnectivityManager,
     private val checkInternet: CheckInternet
@@ -40,7 +42,8 @@ class TodoViewController @AssistedInject constructor(
             @Assisted("TodoFragmentBinding") binding: TodoFragmentBinding,
             @Assisted("TodoLifecycleOwner") lifecycleOwner: LifecycleOwner,
             @Assisted("TodoViewModel") viewModel: TodoViewModel,
-            @Assisted("itemTouchHelper") itemTouchHelperCallback: ItemTouchHelperCallback?
+            @Assisted("itemTouchHelper") itemTouchHelperCallback: ItemTouchHelperCallback?,
+            @Assisted("fabAnimation") fabAnimation: FabAnimation?
         ): TodoViewController
     }
 
@@ -121,6 +124,10 @@ class TodoViewController @AssistedInject constructor(
             val sortedTodoItems = viewModel.sortTodoItems(todoItems)
             viewModel.todoItems = sortedTodoItems
 
+            if (sortedTodoItems.isEmpty()) {
+                fabAnimation?.startAnimation()
+            } else fabAnimation?.endAnimation()
+
             binding.completeTitle.text =
                 fragment.getString(
                     R.string.number_of_completed,
@@ -153,6 +160,7 @@ class TodoViewController @AssistedInject constructor(
             when (stateNetwork) {
                 StateNetwork.AVAILABLE -> binding.internetTitle.visibility = View.GONE
                 StateNetwork.LOST -> binding.internetTitle.visibility = View.VISIBLE
+                else -> throw IllegalArgumentException()
             }
         }
     }

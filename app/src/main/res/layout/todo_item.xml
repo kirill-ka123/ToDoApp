@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:theme="@style/green_checkbox" />
+        android:theme="@style/CheckBox.Green" />
 
     <ImageView
         android:id="@+id/ivImportance"
@@ -38,13 +38,15 @@
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@string/title_item"
-            android:textAppearance="@style/title_item" />
+            android:textAppearance="@style/TextAppearance.Body"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/date_item"
+            android:textAppearance="@style/TextAppearance.Subhead"
+            android:textColor="?android:attr/textColorTertiary"
             android:visibility="gone" />
 
     </LinearLayout>
@@ -55,5 +57,5 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="18dp"
         app:srcCompat="@drawable/ic_info"
-        app:tint="@color/support_separator" />
+        app:tint="?android:attr/textColorTertiary" />
 </LinearLayout>

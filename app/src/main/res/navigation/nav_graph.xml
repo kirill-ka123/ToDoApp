@@ -10,7 +10,11 @@
         android:label="TodoFragment">
         <action
             android:id="@+id/action_todoFragment_to_caseFragment"
-            app:destination="@id/caseFragment" />
+            app:destination="@id/caseFragment"
+            app:enterAnim="@anim/to_left_in"
+            app:exitAnim="@anim/to_left_out"
+            app:popEnterAnim="@anim/to_right_in"
+            app:popExitAnim="@anim/to_right_out" />
     </fragment>
     <fragment
         android:id="@+id/caseFragment"

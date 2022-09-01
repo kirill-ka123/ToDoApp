@@ -21,7 +21,9 @@ class TodoViewModel(
     private val _stateNetwork: MutableLiveData<StateNetwork> = MutableLiveData()
     val stateNetwork: LiveData<StateNetwork> = _stateNetwork
 
-    fun getTodoItemsLiveData() = todoItemsRepository.getTodoItemsLivaData()
+    fun getTodoItemsLiveData(): LiveData<List<TodoItem>> {
+        return todoItemsRepository.getTodoItemsLivaData()
+    }
 
     fun getTodoItemsNetwork() =
         viewModelScope.launch {
@@ -59,3 +61,4 @@ class TodoViewModel(
             todoItem.createdAt
         }
 }
+

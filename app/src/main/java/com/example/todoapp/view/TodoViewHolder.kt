@@ -1,5 +1,6 @@
 package com.example.todoapp.view
 
+import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -54,12 +55,7 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
     private fun setTodoItemDone() {
         setTodoItemGreenCheckbox()
         itemBinding.apply {
-            tvTitleItem.setTextColor(
-                ContextCompat.getColor(
-                    root.context,
-                    R.color.label_tertiary
-                )
-            )
+            tvTitleItem.setTextColor(root.context.getColorFromAttr(android.R.attr.textColorTertiary))
             tvTitleItem.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             ivImportance.visibility = View.GONE
         }
@@ -67,12 +63,7 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
 
     private fun setTodoItemNotDone() {
         itemBinding.apply {
-            tvTitleItem.setTextColor(
-                ContextCompat.getColor(
-                    root.context,
-                    R.color.label_primary
-                )
-            )
+            tvTitleItem.setTextColor(root.context.getColorFromAttr(android.R.attr.textColorPrimary))
             tvTitleItem.paintFlags = 0
         }
     }
@@ -111,7 +102,13 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
         itemBinding.apply {
             checkbox.isChecked = true
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(root.context, R.color.green)
+                ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf()),
+                    intArrayOf(
+                        root.context.getColorFromAttr(androidx.appcompat.R.attr.colorControlActivated),
+                        root.context.getColorFromAttr(androidx.appcompat.R.attr.colorControlActivated)
+                    )
+                )
         }
     }
 
@@ -119,7 +116,13 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
         itemBinding.apply {
             checkbox.isChecked = false
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(root.context, R.color.red)
+                ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf()),
+                    intArrayOf(
+                        root.context.getColorFromAttr(androidx.appcompat.R.attr.colorError),
+                        root.context.getColorFromAttr(androidx.appcompat.R.attr.colorError)
+                    )
+                )
         }
     }
 
@@ -127,9 +130,16 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
         itemBinding.apply {
             checkbox.isChecked = false
             checkbox.buttonTintList =
-                ContextCompat.getColorStateList(root.context, R.color.label_tertiary)
+                ColorStateList(
+                    arrayOf(intArrayOf(android.R.attr.state_pressed), intArrayOf()),
+                    intArrayOf(
+                        root.context.getColorFromAttr(android.R.attr.textColorTertiary),
+                        root.context.getColorFromAttr(android.R.attr.textColorTertiary)
+                    )
+                )
         }
     }
+
 
     private fun setOnClickListeners(
         todoItem: TodoItem, onItemClickListener: ((TodoItem) -> Unit)?,

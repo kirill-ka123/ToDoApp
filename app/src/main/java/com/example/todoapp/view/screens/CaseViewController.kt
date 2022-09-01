@@ -3,13 +3,13 @@ package com.example.todoapp.view.screens
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
 import com.example.todoapp.common.Utils
 import com.example.todoapp.databinding.CaseFragmentBinding
 import com.example.todoapp.models.Importance
 import com.example.todoapp.models.TodoItem
+import com.example.todoapp.view.getColorFromAttr
 import com.example.todoapp.view.viewmodels.CaseViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -59,16 +59,10 @@ class CaseViewController @AssistedInject constructor(
                 binding.tvDate.text = Utils.convertUnixToDate(it.deadline)
             }
             binding.tvDelete.setTextColor(
-                ContextCompat.getColor(
-                    fragment.requireContext(),
-                    R.color.red
-                )
+                fragment.requireContext().getColorFromAttr(androidx.appcompat.R.attr.colorError)
             )
             binding.ivDelete.setColorFilter(
-                ContextCompat.getColor(
-                    fragment.requireContext(),
-                    R.color.red
-                )
+                fragment.requireContext().getColorFromAttr(androidx.appcompat.R.attr.colorError)
             )
         }
     }
@@ -144,7 +138,7 @@ class CaseViewController @AssistedInject constructor(
 
         val datePicker =
             MaterialDatePicker.Builder.datePicker().run {
-                setTheme(R.style.colored_calendar)
+                setTheme(R.style.Calendar_Blue)
                 setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 setCalendarConstraints(calendarConstraints)
                 build()

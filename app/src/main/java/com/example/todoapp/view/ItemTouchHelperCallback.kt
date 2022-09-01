@@ -7,11 +7,13 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
+import com.example.todoapp.view.CustomSnackbar.Companion.setAction
 import com.example.todoapp.view.viewmodels.TodoViewModel
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+
 
 class ItemTouchHelperCallback @AssistedInject constructor(
     @Assisted("TodoViewModel") private val todoViewModel: TodoViewModel,
@@ -50,12 +52,11 @@ class ItemTouchHelperCallback @AssistedInject constructor(
             }
             false -> {
                 todoViewModel.deleteTodoItem(todoItem)
-                Snackbar.make(
-                    view,
-                    view.resources.getString(R.string.case_was_deleted),
-                    Snackbar.LENGTH_LONG
-                ).apply {
-                    setAction(view.resources.getString(R.string.cancel)) {
+
+                CustomSnackbar.make(view.findViewById(R.id.coordinator)).apply {
+                    animationMode = BaseTransientBottomBar.ANIMATION_MODE_SLIDE
+                    duration = 4700
+                    setAction {
                         todoViewModel.addTodoItem(todoItem)
                     }
                     show()
