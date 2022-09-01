@@ -18,6 +18,7 @@
     <string name="no_internet_connection">No internet connection</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="repeat">Repeat</string>
+    <string name="no_internet">There is no internet connection</string>
     <string-array name="importance">
         <item>No</item>
         <item>Low</item>

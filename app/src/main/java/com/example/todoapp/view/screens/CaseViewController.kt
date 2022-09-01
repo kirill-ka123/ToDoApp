@@ -52,7 +52,7 @@ class CaseViewController @AssistedInject constructor(
         todoItem?.let {
             binding.etCase.setText(it.text)
             binding.spinnerImportance.setSelection(convertImportanceToInt(it.importance))
-            if (it.deadline > 0L) {
+            if (it.deadline != null && it.deadline > 0L) {
                 deadline = it.deadline
                 binding.switchDeadline.isChecked = true
                 binding.tvDate.visibility = View.VISIBLE
@@ -97,7 +97,7 @@ class CaseViewController @AssistedInject constructor(
     private fun setupDeleteClickListener() {
         binding.delete.setOnClickListener {
             if (todoItem != null) {
-                viewModel.deleteTodoItemNetwork(todoItem.id)
+                viewModel.deleteTodoItem(todoItem)
             }
             fragment.findNavController().popBackStack()
         }
@@ -121,7 +121,7 @@ class CaseViewController @AssistedInject constructor(
             if (todoItem == null) {
                 if (binding.etCase.text.toString() != "") {
                     val newTodoItem = createNewTodoItem(importance)
-                    viewModel.postTodoItemNetwork(newTodoItem)
+                    viewModel.addTodoItem(newTodoItem)
                     fragment.findNavController().popBackStack()
                 } else Toast.makeText(
                     fragment.requireContext(),
@@ -130,7 +130,7 @@ class CaseViewController @AssistedInject constructor(
                 ).show()
             } else {
                 val changedTodoItem = changeTodoItem(todoItem, importance)
-                viewModel.putTodoItemNetwork(changedTodoItem)
+                viewModel.editTodoItem(changedTodoItem)
                 fragment.findNavController().popBackStack()
             }
         }
@@ -176,7 +176,7 @@ class CaseViewController @AssistedInject constructor(
     }
 
     private fun createNewTodoItem(importance: Importance) = TodoItem(
-        "",
+        "0",
         binding.etCase.text.toString(),
         importance,
         deadline,
@@ -191,10 +191,11 @@ class CaseViewController @AssistedInject constructor(
         changedAt = System.currentTimeMillis() / 1000L
     )
 
-    private fun convertImportanceToInt(importance: Importance) =
+    private fun convertImportanceToInt(importance: Importance?) =
         when (importance) {
             Importance.BASIC -> 0
             Importance.LOW -> 1
             Importance.IMPORTANT -> 2
+            else -> 0
         }
 }

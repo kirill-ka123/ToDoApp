@@ -18,9 +18,9 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
         onCheckboxClickListener: ((TodoItem, Boolean) -> Unit)?
     ) {
         itemBinding.apply {
-            checkbox.isChecked = todoItem.done
+            checkbox.isChecked = todoItem.done == true
             tvTitleItem.text = todoItem.text
-            if (todoItem.done) {
+            if (todoItem.done == true) {
                 setTodoItemDone()
             } else {
                 setTodoItemNotDone()
@@ -40,7 +40,7 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
                     }
                 }
             }
-            if (todoItem.deadline > 0L) {
+            if (todoItem.deadline != null && todoItem.deadline > 0L) {
                 tvDate.visibility = View.VISIBLE
                 tvDate.text = Utils.convertUnixToDate(todoItem.deadline)
             } else {
@@ -136,7 +136,7 @@ class TodoViewHolder(private val itemBinding: TodoItemBinding) :
         onCheckboxClickListener: ((TodoItem, Boolean) -> Unit)?
     ) {
         itemBinding.apply {
-            tvTitleItem
+            titleItem
                 .setOnClickListener {
                     onItemClickListener?.let {
                         it(todoItem)

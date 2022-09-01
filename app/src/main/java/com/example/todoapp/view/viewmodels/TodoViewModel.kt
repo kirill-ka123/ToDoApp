@@ -1,8 +1,13 @@
 package com.example.todoapp.view.viewmodels
 
+import android.net.ConnectivityManager
+import android.net.Network
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.common.StateVisibility
+import com.example.todoapp.data.network.models.StateNetwork
 import com.example.todoapp.data.repository.TodoItemsRepository
 import com.example.todoapp.models.TodoItem
 import kotlinx.coroutines.launch
@@ -10,37 +15,47 @@ import kotlinx.coroutines.launch
 class TodoViewModel(
     private val todoItemsRepository: TodoItemsRepository
 ) : ViewModel() {
-    init {
-        getTodoItemsNetwork()
-    }
-
     var stateVisibility = StateVisibility.VISIBLE
+    var todoItems = listOf<TodoItem>()
 
-    fun getTodoItems() = getTodoItemsLiveData().value ?: emptyList()
+    private val _stateNetwork: MutableLiveData<StateNetwork> = MutableLiveData()
+    val stateNetwork: LiveData<StateNetwork> = _stateNetwork
 
-    fun getTodoItemsLiveData() = todoItemsRepository.todoItemsLiveData
-
-    fun getStateGetRequestLiveData() = todoItemsRepository.stateGetRequestLiveData
-
-    fun getStateSetRequestLiveData() = todoItemsRepository.stateSetRequestLiveData
+    fun getTodoItemsLiveData() = todoItemsRepository.getTodoItemsLivaData()
 
     fun getTodoItemsNetwork() =
         viewModelScope.launch {
             todoItemsRepository.getTodoItemsNetwork()
         }
 
-    fun postTodoItemNetwork(todoItem: TodoItem, id: String) =
+    fun addTodoItem(todoItem: TodoItem) =
         viewModelScope.launch {
-            todoItemsRepository.postTodoItemNetwork(todoItem, id)
+            todoItemsRepository.addTodoItem(todoItem, todoItem.id)
         }
 
-    fun putTodoItemNetwork(todoItem: TodoItem) =
+    fun editTodoItem(todoItem: TodoItem) =
         viewModelScope.launch {
-            todoItemsRepository.putTodoItemNetwork(todoItem)
+            todoItemsRepository.editTodoItem(todoItem)
         }
 
-    fun deleteTodoItemNetwork(id: String) =
+    fun deleteTodoItem(todoItem: TodoItem) =
         viewModelScope.launch {
-            todoItemsRepository.deleteTodoItemNetwork(id)
+            todoItemsRepository.deleteTodoItem(todoItem)
+        }
+
+    val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            getTodoItemsNetwork()
+            _stateNetwork.postValue(StateNetwork.AVAILABLE)
+        }
+
+        override fun onLost(network: Network) {
+            _stateNetwork.postValue(StateNetwork.LOST)
+        }
+    }
+
+    fun sortTodoItems(todoItems: List<TodoItem>) =
+        todoItems.sortedBy { todoItem ->
+            todoItem.createdAt
         }
 }

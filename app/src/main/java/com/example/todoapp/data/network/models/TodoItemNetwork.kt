@@ -8,36 +8,38 @@ data class TodoItemNetwork(
     @SerializedName("id")
     var id: String = "0",
     @SerializedName("text")
-    val text: String = "",
+    val text: String? = "",
     @SerializedName("importance")
-    val importance: String = "no",
+    val importance: String? = "no",
     @SerializedName("deadline")
-    val deadline: Long = 0,
+    val deadline: Long? = 0,
     @SerializedName("done")
-    val done: Boolean = false,
+    val done: Boolean? = false,
     @SerializedName("color")
-    val color: String = "#FFFFFF",
+    val color: String? = "#FFFFFF",
     @SerializedName("created_at")
-    val createdAt: Long = 0,
+    val createdAt: Long? = 0,
     @SerializedName("changed_at")
-    val changedAt: Long = 0,
+    val changedAt: Long? = 0,
     @SerializedName("last_updated_by")
-    val lastUpdatedBy: String = "model"
+    val lastUpdatedBy: String? = "model"
 ) {
     fun mapToTodoItem() = TodoItem(
         id, text,
         try {
-            Importance.valueOf(importance.uppercase())
+            importance?.let {
+                Importance.valueOf(it.uppercase())
+            }
         } catch (e: Exception) {
             Importance.BASIC
         }, deadline, done, createdAt, changedAt
     )
 
     companion object {
-        fun TodoItem.mapToTodoItemNetwork(id: String) = TodoItemNetwork(
+        fun TodoItem.mapToTodoItemNetwork() = TodoItemNetwork(
             id,
             text,
-            importance.name.lowercase(),
+            importance?.name?.lowercase(),
             deadline,
             done,
             "#FFFFFF",

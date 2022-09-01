@@ -66,12 +66,16 @@ class TodoFragment : Fragment(R.layout.todo_fragment) {
                 todoViewModel,
                 itemTouchHelperCallback
             )
-        todoViewController?.setupViews()
-        todoViewController?.setupObservers()
+        todoViewController?.apply {
+            setupViews()
+            setupTodoItemsObserver()
+            setupNetworkCallback()
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        todoViewController?.unregisterNetworkCallback()
         todoViewController = null
         itemTouchHelperCallback = null
         _binding = null

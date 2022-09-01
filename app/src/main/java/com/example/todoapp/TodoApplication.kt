@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class TodoApplication : Application() {
-
     lateinit var appComponent: AppComponent
         private set
 

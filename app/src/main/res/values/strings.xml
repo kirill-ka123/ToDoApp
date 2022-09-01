@@ -17,6 +17,7 @@
     <string name="no_internet_connection">Нет интернет соединения</string>
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="repeat">Повторить</string>
+    <string name="no_internet">Подключение к интернету отсутствует</string>
     <string-array name="importance">
         <item>Нет</item>
         <item>Низкая</item>

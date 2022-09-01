@@ -13,7 +13,8 @@ class NetworkWorker(val context: Context, workerParams: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         return try {
-            val todoItemsRepository = (context.applicationContext as TodoApplication).todoItemsRepository
+            val todoItemsRepository =
+                (context.applicationContext as TodoApplication).todoItemsRepository
             todoItemsRepository.getTodoItemsNetwork()
             Result.success()
         } catch (e: InterruptedException) {
