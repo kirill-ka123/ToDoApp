@@ -1,6 +1,8 @@
 package com.example.todoapp.domain.usecases
 
 import android.util.Log
+import com.example.todoapp.common.Utils.callWithInternetCheck
+import com.example.todoapp.common.Utils.callWithRetry
 import com.example.todoapp.data.SessionManager
 import com.example.todoapp.data.db.models.TodoItem
 import com.example.todoapp.data.network.CheckInternet
@@ -8,10 +10,6 @@ import com.example.todoapp.data.network.PrepareRequests
 import com.example.todoapp.data.network.models.UpdateItemResponse
 import com.example.todoapp.data.repository.TodoItemsRepository
 import com.example.todoapp.di.scopes.AppScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
-import java.io.IOException
 import javax.inject.Inject
 
 @AppScope
@@ -22,28 +20,14 @@ class UpdateTodoItemUseCase @Inject constructor(
     private val checkInternet: CheckInternet
 ) {
     private suspend fun retrofitCall(call: suspend () -> (UpdateItemResponse)) {
-        retrofitCallInFlow { call() }.retry(1) {
-            delay(NETWORK_RETRY_DELAY)
-            return@retry true
-        }.catch {
-            Log.e("network", "Request failure: ${it.message}")
-        }.collect()
-    }
-
-    private fun retrofitCallInFlow(call: suspend () -> (UpdateItemResponse)): Flow<UpdateItemResponse> {
-        return flow {
-            val updateItemResponse = callWithInternetCheck { call() }
+        val callWithRetry: suspend () -> (Unit) = {
+            val updateItemResponse = callWithInternetCheck(checkInternet) { call() }
             sessionManager.saveRevisionNetwork(updateItemResponse.revision)
-            emit(updateItemResponse)
-        }.flowOn(Dispatchers.IO)
-    }
-
-    private suspend fun <T> callWithInternetCheck(
-        call: suspend () -> (T)
-    ): T {
-        if (checkInternet.hasInternetConnection()) {
-            return call()
-        } else throw IOException("Нет интернет соединения")
+        }
+        val actionAfterErroneousCall: (Throwable) -> (Unit) = {
+            Log.e("network", "Request failure: ${it.message}")
+        }
+        callWithRetry(callWithRetry, actionAfterErroneousCall)
     }
 
     suspend fun addTodoItem(todoItem: TodoItem, id: String?) {
@@ -89,9 +73,5 @@ class UpdateTodoItemUseCase @Inject constructor(
 
     private suspend fun deleteTodoItemNetwork(id: String) {
         retrofitCall { todoItemsRepository.deleteTodoItemNetwork(id) }
-    }
-
-    companion object {
-        const val NETWORK_RETRY_DELAY = 1000L
     }
 }

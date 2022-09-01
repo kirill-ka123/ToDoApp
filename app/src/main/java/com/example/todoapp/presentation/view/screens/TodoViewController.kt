@@ -3,14 +3,11 @@ package com.example.todoapp.presentation.view.screens
 import android.net.ConnectivityManager
 import android.util.Log
 import android.view.View
-import android.widget.ScrollView
 import androidx.core.os.bundleOf
-import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.common.StateVisibility
 import com.example.todoapp.data.db.models.TodoItem
@@ -142,17 +139,6 @@ class TodoViewController @AssistedInject constructor(
             } else {
                 adapter.differ.submitList(getNotCompletedTodoItems(sortedTodoItems))
             }
-
-            val recyclerView = fragment.requireActivity().findViewById<RecyclerView>(R.id.rvCases)
-            val nested =
-                fragment.requireActivity().findViewById<NestedScrollView>(R.id.nestedScrollView)
-            nested.fullScroll(ScrollView.FOCUS_DOWN)
-            recyclerView.smoothScrollToPosition(15)
-//            val layoutManager = recyclerView.layoutManager!!
-//            recyclerView.post {
-//                layoutManager.smoothScrollToPosition(recyclerView, 15)
-//            }
-            //recyclerView.scrollToPosition(13)
         }
     }
 

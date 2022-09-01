@@ -1,6 +1,7 @@
 package com.example.todoapp.domain.usecases
 
 import android.util.Log
+import com.example.todoapp.common.Utils.callWithInternetCheck
 import com.example.todoapp.data.SessionManager
 import com.example.todoapp.data.db.models.TodoItem
 import com.example.todoapp.data.network.CheckInternet
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.io.IOException
 import javax.inject.Inject
 
 @AppScope
@@ -22,14 +22,6 @@ class GetTodoItemsUseCase @Inject constructor(
     private val checkInternet: CheckInternet,
     private val synchronizationDataUseCase: SynchronizationDataUseCase
 ) {
-    private suspend fun <T> callWithInternetCheck(
-        call: suspend () -> (T)
-    ): T {
-        if (checkInternet.hasInternetConnection()) {
-            return call()
-        } else throw IOException("Нет интернет соединения")
-    }
-
     fun getTodoItemsLivaData() = todoItemsRepository.getTodoItemsLivaData()
 
     suspend fun getTodoItemsNetwork() {
@@ -43,7 +35,7 @@ class GetTodoItemsUseCase @Inject constructor(
     private suspend fun getTodoItemsInFlow(): Flow<List<TodoItem>> {
         return flow {
             val getItemsResponse =
-                callWithInternetCheck { todoItemsRepository.getTodoItemsNetwork() }
+                callWithInternetCheck(checkInternet) { todoItemsRepository.getTodoItemsNetwork() }
             sessionManager.saveRevisionNetwork(getItemsResponse.revision)
             emit(getListAfterGetRequest(getItemsResponse))
         }.flowOn(Dispatchers.IO)
