@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/todoFragment"
-        android:name="com.example.todoapp.view.screens.TodoFragment"
+        android:name="com.example.todoapp.presentation.view.screens.TodoFragment"
         android:label="TodoFragment">
         <action
             android:id="@+id/action_todoFragment_to_caseFragment"
@@ -18,12 +18,12 @@
     </fragment>
     <fragment
         android:id="@+id/caseFragment"
-        android:name="com.example.todoapp.view.screens.CaseFragment"
+        android:name="com.example.todoapp.presentation.view.screens.CaseFragment"
         android:label="CaseFragment">
         <argument
             android:name="case"
             android:defaultValue="@null"
-            app:argType="com.example.todoapp.models.TodoItem"
+            app:argType="com.example.todoapp.data.db.models.TodoItem"
             app:nullable="true" />
     </fragment>
 </navigation>

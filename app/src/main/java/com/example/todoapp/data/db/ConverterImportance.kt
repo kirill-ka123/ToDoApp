@@ -1,7 +1,7 @@
 package com.example.todoapp.data.db
 
 import androidx.room.TypeConverter
-import com.example.todoapp.models.Importance
+import com.example.todoapp.data.db.models.Importance
 
 class ConverterImportance {
     @TypeConverter

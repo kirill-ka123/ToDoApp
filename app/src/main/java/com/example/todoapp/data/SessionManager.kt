@@ -2,31 +2,28 @@ package com.example.todoapp.data
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.todoapp.di.scopes.AppScope
-import javax.inject.Inject
 
-@AppScope
-class SessionManager @Inject constructor(context: Context) {
+open class SessionManager(context: Context) {
     private var prefs: SharedPreferences =
         context.getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE)
 
-    fun saveRevisionNetwork(revision: Int) {
+    open fun saveRevisionNetwork(revision: Int) {
         val editor = prefs.edit()
         editor.putInt(REVISION_NETWORK, revision)
         editor.apply()
     }
 
-    fun fetchRevisionNetwork(): Int {
+    open fun fetchRevisionNetwork(): Int {
         return prefs.getInt(REVISION_NETWORK, 0)
     }
 
-    fun saveRevisionDatabase(revision: Int) {
+    open fun saveRevisionDatabase(revision: Int) {
         val editor = prefs.edit()
         editor.putInt(REVISION_DATABASE, revision)
         editor.apply()
     }
 
-    fun fetchRevisionDatabase(): Int {
+    open fun fetchRevisionDatabase(): Int {
         return prefs.getInt(REVISION_DATABASE, 0)
     }
 

@@ -10,9 +10,8 @@ import com.example.todoapp.di.DaggerAppComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class TodoApplication : Application() {
-    lateinit var appComponent: AppComponent
-        private set
+open class TodoApplication : Application() {
+    open lateinit var appComponent: AppComponent
 
     @Inject
     lateinit var todoItemsRepository: TodoItemsRepository

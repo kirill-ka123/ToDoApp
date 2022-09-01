@@ -1,7 +1,7 @@
 package com.example.todoapp.data.network.models
 
-import com.example.todoapp.models.Importance
-import com.example.todoapp.models.TodoItem
+import com.example.todoapp.data.db.models.Importance
+import com.example.todoapp.data.db.models.TodoItem
 import com.google.gson.annotations.SerializedName
 
 data class TodoItemNetwork(

@@ -1,11 +1,11 @@
 package com.example.todoapp.data.network
 
+import com.example.todoapp.data.db.models.TodoItem
 import com.example.todoapp.data.network.models.SetItemsRequest
 import com.example.todoapp.data.network.models.TodoItemNetwork
 import com.example.todoapp.data.network.models.TodoItemNetwork.Companion.mapToTodoItemNetwork
 import com.example.todoapp.data.network.models.UpdateItemRequest
 import com.example.todoapp.di.scopes.AppScope
-import com.example.todoapp.models.TodoItem
 import javax.inject.Inject
 
 @AppScope
