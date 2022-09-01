@@ -20,14 +20,12 @@ class UpdateTodoItemUseCase @Inject constructor(
     private val checkInternet: CheckInternet
 ) {
     private suspend fun retrofitCall(call: suspend () -> (UpdateItemResponse)) {
-        val callWithRetry: suspend () -> (Unit) = {
+        callWithRetry(call = {
             val updateItemResponse = callWithInternetCheck(checkInternet) { call() }
             sessionManager.saveRevisionNetwork(updateItemResponse.revision)
-        }
-        val actionAfterErroneousCall: (Throwable) -> (Unit) = {
+        }, actionAfterErroneousCall = {
             Log.e("network", "Request failure: ${it.message}")
-        }
-        callWithRetry(callWithRetry, actionAfterErroneousCall)
+        })
     }
 
     suspend fun addTodoItem(todoItem: TodoItem, id: String?) {

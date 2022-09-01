@@ -28,13 +28,11 @@ class SynchronizationNetworkUseCase @Inject constructor(
     private suspend fun patchTodoItemsNetwork(todoItems: List<TodoItem>) {
         val setItemsRequest = preparePatchRequest(todoItems)
 
-        val callWithRetry: suspend () -> (Unit) = {
+        callWithRetry(call = {
             patchTodoItemsWithInternetCheck(setItemsRequest)
-        }
-        val actionAfterErroneousCall: (Throwable) -> (Unit) = {
+        }, actionAfterErroneousCall = {
             Log.e("network", "Request failure: ${it.message}")
-        }
-        callWithRetry(callWithRetry, actionAfterErroneousCall)
+        })
     }
 
     private suspend fun patchTodoItemsWithInternetCheck(setItemsRequest: SetItemsRequest) {
